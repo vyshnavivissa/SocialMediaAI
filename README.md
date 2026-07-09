@@ -21,42 +21,35 @@ The platform uses LangChain with the Groq API for AI content generation, Django 
 ## Features
 
 - AI-Powered Social Media Content Generation
-- Image Upload and Preview
-- User Prompt-Based Content Generation
-- AI-Generated Master Captions
+- User Prompt-Based Content Creation
+- Image Upload and Image Preview
+- AI-Generated Master Caption
 - AI-Generated Hashtags
 - Platform-Specific Content Generation
-- Twitter/X Post Generation
+- Twitter/X Content Generation
 - Instagram Caption Generation
-- LinkedIn Post Generation
+- LinkedIn Professional Post Generation
 - Facebook Post Generation
 - Multi-Platform Selection
-- Editable Generated Content
-- Live Post Preview
-- Publish Now Functionality
-- Mock Social Media Publishing
-- Publishing Status Tracking
+- Separate Content for Every Platform
+- Editable Platform-Specific Posts
+- Live Social Media Post Preview
+- Publish Posts Immediately
+- Mock Multi-Platform Publishing
+- Platform Publishing Status
 - Schedule Posts for a Future Date and Time
-- Asynchronous Scheduled Publishing
-- Redis Message Queue
-- Celery Background Workers
+- Celery Background Task Processing
+- Redis Message Broker
 - Scheduled Post History
-- Pending Post Status
-- Published Post Status
-- Failed Post Status
-- Generated Post Persistence
-- Published Post Persistence
-- REST APIs using Django REST Framework
-- OAuth Provider Architecture
-- OAuth Factory Pattern
-- OAuth Service Layer
-- Social Media Account Connection Architecture
-- Social Media Account Disconnection Architecture
+- Pending, Published, and Failed Status Tracking
+- Generated Post Database Storage
+- Published Post Database Storage
 - Responsive React Dashboard
-- Buffer-Inspired Social Media Management Interface
+- Modern Social Media Management Interface
 - Toast Notifications
-- Django Admin Dashboard
-- Docker-Based Redis Service
+- Django REST APIs
+- OAuth-Ready Architecture
+- Social Media Account Connection Interface
 
 ---
 
@@ -217,17 +210,10 @@ SocialMediaAI/
 │   │
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Sidebar.jsx
-│   │   │   ├── Header.jsx
-│   │   │   ├── CreatePostCard.jsx
-│   │   │   ├── ImageUploader.jsx
-│   │   │   ├── PromptInput.jsx
+│   │   │   ├── Navbar.jsx
 │   │   │   ├── PlatformSelector.jsx
-│   │   │   ├── GenerateButton.jsx
-│   │   │   ├── PreviewCard.jsx
-│   │   │   ├── PublishButton.jsx
-│   │   │   ├── StatusCard.jsx
-│   │   │   └── SchedulePost.jsx
+│   │   │   ├── ComposePost.jsx
+│   │   │   ├── LivePreview.jsx
 │   │   │
 │   │   ├── pages/
 │   │   │   ├── Dashboard.jsx
@@ -457,7 +443,26 @@ Stores:
 - Refresh token
 - Token expiration information
 - Connection status
+- 
+## Frontend Dashboard
 
+The React dashboard provides:
+
+- Modern navigation bar
+- Social media platform selection cards
+- Content idea input
+- Image upload interface
+- AI content generation
+- Live image preview
+- Master caption preview
+- AI-generated hashtag preview
+- Separate platform-specific previews
+- Editable platform content
+- Publish Now functionality
+- Date and time selection
+- Schedule Post functionality
+- History navigation
+- Social account settings interface
 ---
 
 ## REST API Endpoints
@@ -757,7 +762,36 @@ The generation workflow creates:
 Each platform uses a dedicated prompt template to generate content appropriate for its audience and content style.
 
 ---
+## Platform-Specific Content Generation
 
+SocialAI generates different content based on the communication style and audience of every social media platform.
+
+```text
+User Content Idea
+        ↓
+Master Caption Generation
+        ↓
+Hashtag Generation
+        ↓
+Platform-Specific Prompt Processing
+        │
+        ├── Twitter/X
+        │     Short and concise content
+        │
+        ├── Instagram
+        │     Engaging visual caption
+        │
+        ├── LinkedIn
+        │     Professional content
+        │
+        └── Facebook
+              Community-focused content
+        ↓
+Editable Platform Posts
+        ↓
+Live Preview
+        ↓
+Publish Now or Schedule
 ## Prompt Engineering
 
 Dedicated prompts are used for:
@@ -839,47 +873,33 @@ This project demonstrates modern AI application engineering practices, including
 ---
 
 ## Current Implementation Status
-
 ```text
-AI Content Generation                 Completed
-
-Image Upload                          Completed
-
-Master Caption Generation             Completed
-
-Hashtag Generation                    Completed
-
-Twitter/X Content Generation          Completed
-
-Instagram Content Generation          Completed
-
-LinkedIn Content Generation           Completed
-
-Facebook Content Generation           Completed
-
-Multi-Platform Selection              Completed
-
-Editable Live Preview                 Completed
-
-Mock Publishing                       Completed
-
-Publishing Status                     Completed
-
-Scheduled Publishing                  Completed
-
-Redis Integration                     Completed
-
-Celery Integration                    Completed
-
-Schedule History                      Completed
-
-OAuth Architecture                    Completed
-
-Real OAuth Authentication             Planned
-
-Real Platform Publishing              Planned
+| Feature | Status |
+|---|---|
+| AI Content Generation | Completed |
+| Image Upload | Completed |
+| Image Preview | Completed |
+| Master Caption Generation | Completed |
+| Hashtag Generation | Completed |
+| Twitter/X Content Generation | Completed |
+| Instagram Content Generation | Completed |
+| LinkedIn Content Generation | Completed |
+| Facebook Content Generation | Completed |
+| Multi-Platform Selection | Completed |
+| Separate Platform Content | Completed |
+| Editable Platform Content | Completed |
+| Live Post Preview | Completed |
+| Modern React Dashboard | Completed |
+| Mock Publishing | Completed |
+| Publishing Status | Completed |
+| Scheduled Publishing | Completed |
+| Redis Integration | Completed |
+| Celery Integration | Completed |
+| Schedule History Backend | Completed |
+| OAuth Architecture | Completed |
+| Real OAuth Authentication | Planned |
+| Real Social Media Publishing | Planned |
 ```
-
 ---
 
 ## Future Enhancements
@@ -923,7 +943,7 @@ Real Platform Publishing              Planned
 - MLflow Prompt and Model Tracking
 - LLM Response Evaluation
 - Automated Prompt Testing
-
+  
 ---
 
 ## Use Cases
