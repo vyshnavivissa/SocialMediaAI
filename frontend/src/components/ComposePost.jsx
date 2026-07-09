@@ -1,17 +1,12 @@
-import {
-    useState,
-} from "react";
+import { useState } from "react";
 
 import axios from "axios";
 
 import toast from "react-hot-toast";
 
-import {
-    FaCloudUploadAlt,
-} from "react-icons/fa";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
-import PlatformSelector
-from "./PlatformSelector";
+import PlatformSelector from "./PlatformSelector";
 
 
 function ComposePost({
@@ -30,20 +25,16 @@ function ComposePost({
 
 }) {
 
-    const [
-        loading,
-        setLoading,
-    ] = useState(false);
+    const [loading, setLoading] =
+        useState(false);
+
+    const [scheduledTime, setScheduledTime] =
+        useState("");
 
 
-    const [
-        scheduledTime,
-        setScheduledTime,
-    ] = useState("");
+    // Generate AI content
 
-
-    const generateContent =
-        async () => {
+    const generateContent = async () => {
 
         if (!prompt.trim()) {
 
@@ -56,12 +47,10 @@ function ComposePost({
         }
 
 
-        if (
-            platforms.length === 0
-        ) {
+        if (platforms.length === 0) {
 
             toast.error(
-                "Select a platform."
+                "Select at least one platform."
             );
 
             return;
@@ -81,7 +70,7 @@ function ComposePost({
 
         platforms.forEach(
 
-            platform => {
+            (platform) => {
 
                 formData.append(
                     "platforms",
@@ -111,11 +100,11 @@ function ComposePost({
             const response =
                 await axios.post(
 
-                "http://127.0.0.1:8000/api/generate/",
+                    `${import.meta.env.VITE_API_URL}/api/generate/`,
 
-                formData
+                    formData
 
-            );
+                );
 
 
             setGeneratedData(
@@ -132,12 +121,18 @@ function ComposePost({
         catch (error) {
 
             console.error(
+
                 error.response?.data
+                || error.message
+
             );
 
 
             toast.error(
-                "Content generation failed."
+
+                error.response?.data?.message
+                || "Content generation failed."
+
             );
 
         }
@@ -151,8 +146,9 @@ function ComposePost({
     };
 
 
-    const publishPost =
-        async () => {
+    // Publish immediately
+
+    const publishPost = async () => {
 
         if (!generatedData) {
 
@@ -165,18 +161,30 @@ function ComposePost({
         }
 
 
+        if (platforms.length === 0) {
+
+            toast.error(
+                "Select at least one platform."
+            );
+
+            return;
+
+        }
+
+
         try {
 
             await axios.post(
 
-                "http://127.0.0.1:8000/api/publish/",
+                `${import.meta.env.VITE_API_URL}/api/publish/`,
 
                 {
 
                     generated_post:
                         generatedData.id,
 
-                    platforms,
+                    platforms:
+                        platforms,
 
                 }
 
@@ -184,7 +192,7 @@ function ComposePost({
 
 
             toast.success(
-                "Post published!"
+                "Post published successfully!"
             );
 
         }
@@ -192,12 +200,18 @@ function ComposePost({
         catch (error) {
 
             console.error(
+
                 error.response?.data
+                || error.message
+
             );
 
 
             toast.error(
-                "Publishing failed."
+
+                error.response?.data?.message
+                || "Publishing failed."
+
             );
 
         }
@@ -205,13 +219,25 @@ function ComposePost({
     };
 
 
-    const schedulePost =
-        async () => {
+    // Schedule post
+
+    const schedulePost = async () => {
 
         if (!generatedData) {
 
             toast.error(
                 "Generate content first."
+            );
+
+            return;
+
+        }
+
+
+        if (platforms.length === 0) {
+
+            toast.error(
+                "Select at least one platform."
             );
 
             return;
@@ -222,7 +248,27 @@ function ComposePost({
         if (!scheduledTime) {
 
             toast.error(
-                "Select date and time."
+                "Select a future date and time."
+            );
+
+            return;
+
+        }
+
+
+        const selectedDate =
+            new Date(
+                scheduledTime
+            );
+
+
+        if (
+            selectedDate <=
+            new Date()
+        ) {
+
+            toast.error(
+                "Select a future date and time."
             );
 
             return;
@@ -234,7 +280,7 @@ function ComposePost({
 
             await axios.post(
 
-                "http://127.0.0.1:8000/schedule/",
+                `${import.meta.env.VITE_API_URL}/schedule/`,
 
                 {
 
@@ -242,13 +288,11 @@ function ComposePost({
                         generatedData.id,
 
                     scheduled_time:
-
-                        new Date(
-                            scheduledTime
-                        )
+                        selectedDate
                         .toISOString(),
 
-                    platforms,
+                    platforms:
+                        platforms,
 
                 }
 
@@ -256,20 +300,29 @@ function ComposePost({
 
 
             toast.success(
-                "Post scheduled!"
+                "Post scheduled successfully!"
             );
+
+
+            setScheduledTime("");
 
         }
 
         catch (error) {
 
             console.error(
+
                 error.response?.data
+                || error.message
+
             );
 
 
             toast.error(
-                "Scheduling failed."
+
+                error.response?.data?.message
+                || "Scheduling failed."
+
             );
 
         }
@@ -307,9 +360,7 @@ function ComposePost({
                 <div className="form-section">
 
                     <label
-                        className="
-                        section-label
-                        "
+                        className="section-label"
                     >
 
                         2. Content Idea
@@ -319,22 +370,27 @@ function ComposePost({
 
                     <textarea
 
-                        value={prompt}
+                        value={
+                            prompt
+                        }
 
                         onChange={
-                            event =>
+
+                            (event) =>
+
                                 setPrompt(
+
                                     event
                                     .target
                                     .value
+
                                 )
+
                         }
 
-                        placeholder="
-Describe the social media
-content you want AI to
-generate...
-                        "
+                        placeholder={
+                            "Describe the social media content you want AI to generate..."
+                        }
 
                     />
 
@@ -344,9 +400,7 @@ generate...
                 <div className="form-section">
 
                     <label
-                        className="
-                        section-label
-                        "
+                        className="section-label"
                     >
 
                         3. Add Media
@@ -355,9 +409,7 @@ generate...
 
 
                     <label
-                        className="
-                        upload-area
-                        "
+                        className="upload-area"
                     >
 
                         <FaCloudUploadAlt />
@@ -369,9 +421,9 @@ generate...
 
                                 image
 
-                                ? image.name
+                                    ? image.name
 
-                                : "Upload Image"
+                                    : "Upload Image"
 
                             }
 
@@ -387,14 +439,26 @@ generate...
                             hidden
 
                             onChange={
-                                event =>
-                                    setImage(
+
+                                (event) => {
+
+                                    const file =
 
                                         event
                                         .target
-                                        .files[0]
+                                        .files[0];
 
-                                    )
+
+                                    if (file) {
+
+                                        setImage(
+                                            file
+                                        );
+
+                                    }
+
+                                }
+
                             }
 
                         />
@@ -406,9 +470,9 @@ generate...
 
                 <button
 
-                    className="
-                    generate-button
-                    "
+                    type="button"
+
+                    className="generate-button"
 
                     onClick={
                         generateContent
@@ -424,9 +488,9 @@ generate...
 
                         loading
 
-                        ? "Generating..."
+                            ? "Generating..."
 
-                        : "Generate AI Content"
+                            : "Generate AI Content"
 
                     }
 
@@ -435,9 +499,9 @@ generate...
 
                 <button
 
-                    className="
-                    publish-button
-                    "
+                    type="button"
+
+                    className="publish-button"
 
                     onClick={
                         publishPost
@@ -450,35 +514,37 @@ generate...
                 </button>
 
 
-                <div
-                    className="
-                    schedule-row
-                    "
-                >
+                <div className="schedule-row">
+
 
                     <input
 
-                        type="
-                        datetime-local
-                        "
+                        type="datetime-local"
 
                         value={
                             scheduledTime
                         }
 
                         onChange={
-                            event =>
+
+                            (event) =>
+
                                 setScheduledTime(
+
                                     event
                                     .target
                                     .value
+
                                 )
+
                         }
 
                     />
 
 
                     <button
+
+                        type="button"
 
                         onClick={
                             schedulePost
