@@ -1,98 +1,48 @@
-# ==========================================
+# Environment variables
+.env
+backend/.env
+
 # Python
-# ==========================================
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.so
-*.egg-info/
 
-# ==========================================
-# Virtual Environments
-# ==========================================
+# Virtual environments
 venv/
 .venv/
 env/
-ENV/
+backend/venv/
 
-# ==========================================
-# Environment Variables
-# ==========================================
-.env
-.env.*
-backend/.env
-frontend/.env
-
-# ==========================================
 # Django
-# ==========================================
 backend/db.sqlite3
-backend/db.sqlite3-journal
-
-backend/media/
-backend/uploads/
-backend/generated_posts/
+*.sqlite3
 backend/staticfiles/
 
-# ==========================================
-# Python Cache
-# ==========================================
-**/__pycache__/
-**/*.pyc
+# Uploaded images
+backend/uploads/
+backend/media/
 
-# ==========================================
-# Jupyter
-# ==========================================
-.ipynb_checkpoints/
+# Celery
+celerybeat-schedule
+celerybeat.pid
 
-# ==========================================
+# React
+frontend/node_modules/
+frontend/dist/
+
 # Logs
-# ==========================================
 *.log
 
-# ==========================================
-# Testing
-# ==========================================
-.pytest_cache/
-.coverage
-coverage.xml
-htmlcov/
-
-# ==========================================
-# VS Code / IDE
-# ==========================================
+# IDE
 .vscode/
 .idea/
 
-# ==========================================
-# Node / React
-# ==========================================
-frontend/node_modules/
-frontend/dist/
-frontend/build/
-
-# ==========================================
-# OS Files
-# ==========================================
+# Operating system
 .DS_Store
 Thumbs.db
 
-# ==========================================
-# Build
-# ==========================================
-dist/
-build/
-
-# ==========================================
-# Secrets
-# ==========================================
-*.pem
-*.key
-*.crt
-
-# ==========================================
-# Temporary Files
-# ==========================================
-*.tmp
-*.bak
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/

@@ -1,61 +1,167 @@
-const platformList = [
-    "twitter",
-    "instagram",
-    "linkedin",
-    "facebook",
-];
+import {
+    FaTwitter,
+    FaFacebook,
+    FaInstagram,
+    FaLinkedin,
+} from "react-icons/fa";
 
-function PlatformSelector({ platforms, setPlatforms }) {
 
-    const handleChange = (platform) => {
+function PlatformSelector({
+    platforms,
+    setPlatforms,
+}) {
 
-        if (platforms.includes(platform)) {
+    const platformItems = [
+
+        {
+            id: "twitter",
+            name: "Twitter",
+            icon: <FaTwitter />,
+        },
+
+        {
+            id: "facebook",
+            name: "Facebook",
+            icon: <FaFacebook />,
+        },
+
+        {
+            id: "instagram",
+            name: "Instagram",
+            icon: <FaInstagram />,
+        },
+
+        {
+            id: "linkedin",
+            name: "LinkedIn",
+            icon: <FaLinkedin />,
+        },
+
+    ];
+
+
+    const togglePlatform = (
+        platform
+    ) => {
+
+        if (
+            platforms.includes(
+                platform
+            )
+        ) {
 
             setPlatforms(
-                platforms.filter((p) => p !== platform)
+
+                platforms.filter(
+
+                    item =>
+                        item !==
+                        platform
+
+                )
+
             );
 
-        } else {
+        }
 
-            setPlatforms(
-                [...platforms, platform]
-            );
+        else {
+
+            setPlatforms([
+
+                ...platforms,
+
+                platform,
+
+            ]);
 
         }
 
     };
 
+
     return (
-        <div className="bg-white p-4 rounded-lg shadow mt-6">
 
-            <h2 className="text-lg font-semibold mb-2">
-                Select Platforms
-            </h2>
+        <div>
 
-            {platformList.map((platform) => (
+            <label className="section-label">
 
-                <div key={platform} className="mb-2">
+                1. Select Social Networks
 
-                    <label>
+            </label>
 
-                        <input
-                            type="checkbox"
-                            checked={platforms.includes(platform)}
-                            onChange={() => handleChange(platform)}
-                        />
 
-                        <span className="ml-2 capitalize">
-                            {platform}
-                        </span>
+            <div className="platform-grid">
 
-                    </label>
+                {
 
-                </div>
+                    platformItems.map(
 
-            ))}
+                        platform => (
+
+                            <button
+
+                                type="button"
+
+                                key={
+                                    platform.id
+                                }
+
+                                onClick={() =>
+                                    togglePlatform(
+                                        platform.id
+                                    )
+                                }
+
+                                className={
+
+                                    platforms.includes(
+                                        platform.id
+                                    )
+
+                                    ? "platform active"
+
+                                    : "platform"
+
+                                }
+
+                            >
+
+                                <span
+                                    className="
+                                    platform-icon
+                                    "
+                                >
+
+                                    {
+                                        platform.icon
+                                    }
+
+                                </span>
+
+
+                                <span>
+
+                                    {
+                                        platform.name
+                                    }
+
+                                </span>
+
+                            </button>
+
+                        )
+
+                    )
+
+                }
+
+            </div>
 
         </div>
+
     );
+
 }
+
 
 export default PlatformSelector;

@@ -1,6 +1,17 @@
 from rest_framework import serializers
 import os
 
+from .models import ScheduledPost
+
+
+class SchedulePostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = ScheduledPost
+
+        fields = "__all__"
+
 PLATFORM_CHOICES = [
     ("twitter", "Twitter"),
     ("instagram", "Instagram"),

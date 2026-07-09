@@ -1,9 +1,73 @@
+import {
+    NavLink,
+} from "react-router-dom";
+
+
 function Navbar() {
+
     return (
-        <nav className="bg-blue-600 text-white p-4 text-center text-2xl font-bold">
-            AI Social Media Publisher
-        </nav>
+
+        <header className="navbar">
+
+            <div className="nav-container">
+
+                <NavLink
+                    to="/"
+                    className="brand"
+                >
+
+                    <div className="brand-icon">
+
+                        S
+
+                    </div>
+
+                    <span>
+
+                        SocialAI
+
+                    </span>
+
+                </NavLink>
+
+
+                <nav className="nav-links">
+
+                    <NavLink
+                        to="/"
+                    >
+
+                        Dashboard
+
+                    </NavLink>
+
+
+                    <NavLink
+                        to="/history"
+                    >
+
+                        History
+
+                    </NavLink>
+
+
+                    <NavLink
+                        to="/settings"
+                    >
+
+                        Settings
+
+                    </NavLink>
+
+                </nav>
+
+            </div>
+
+        </header>
+
     );
+
 }
+
 
 export default Navbar;

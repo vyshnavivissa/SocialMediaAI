@@ -13,4 +13,5 @@ urlpatterns = [
         "publish/",
         PublishAPIView.as_view(),
     ),
+    
 ]
