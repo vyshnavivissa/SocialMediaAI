@@ -104,6 +104,7 @@ class SocialAccount(models.Model):
 
     def __str__(self):
         return f"{self.platform} - {self.account_name}"
+    
 class ScheduledPost(models.Model):
 
     STATUS_CHOICES = [

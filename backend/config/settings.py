@@ -320,22 +320,7 @@ REST_FRAMEWORK = {
 }
 
 
-# ==========================================
-# CORS CONFIGURATION
-# ==========================================
-
-CORS_ALLOWED_ORIGINS = [
-
-    # Local React frontend
-
-    "http://localhost:5173",
-
-
-    # Deployed Vercel frontend
-
-    "https://social-media-ai-orpin.vercel.app",
-
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 CORS_ALLOW_CREDENTIALS = True
