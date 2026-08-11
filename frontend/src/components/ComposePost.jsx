@@ -174,7 +174,7 @@ function ComposePost({
 
         try {
 
-            await axios.post(
+            const response = await axios.post(
 
                 `${import.meta.env.VITE_API_URL}/api/publish/`,
 
@@ -190,10 +190,30 @@ function ComposePost({
 
             );
 
+            const results = response.data?.results || {};
+            let allSuccess = true;
+            let failureMessages = [];
 
-            toast.success(
-                "Post published successfully!"
-            );
+            Object.entries(results).forEach(([platform, res]) => {
+                if (res.status === "failed") {
+                    allSuccess = false;
+                    failureMessages.push(`${platform.toUpperCase()}: ${res.reason || "unknown error"}`);
+                }
+            });
+
+            if (allSuccess) {
+                toast.success("Post published successfully!");
+            } else {
+                toast.error(
+                    <div>
+                        <strong>Some publications failed:</strong>
+                        <ul style={{ margin: "5px 0 0 15px", padding: 0 }}>
+                            {failureMessages.map((msg, idx) => <li key={idx}>{msg}</li>)}
+                        </ul>
+                    </div>,
+                    { duration: 6000 }
+                );
+            }
 
         }
 

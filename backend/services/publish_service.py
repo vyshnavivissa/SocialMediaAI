@@ -24,17 +24,24 @@ class PublishService:
             id=generated_post_id
         )
 
+        # Retrieve image path if available
+        image_path = None
+        if generated_post.image:
+            try:
+                image_path = generated_post.image.path
+            except Exception:
+                pass
+
         for platform, post in posts.items():
 
             tool = cls.TOOLS.get(platform)
 
             if tool:
+                args = {"post": post}
+                if platform == "linkedin" and image_path:
+                    args["image_path"] = image_path
 
-                result = tool.invoke(
-                    {
-                        "post": post
-                    }
-                )
+                result = tool.invoke(args)
 
                 PublishedPost.objects.create(
                     generated_post=generated_post,

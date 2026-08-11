@@ -4,7 +4,7 @@ from langchain_core.tools import tool
 
 
 @tool
-def linkedin_tool(post: str) -> dict:
+def linkedin_tool(post: str, image_path: str = None) -> dict:
     """
     Publish a post to LinkedIn.
     """
@@ -21,7 +21,8 @@ def linkedin_tool(post: str) -> dict:
             result = OAuthService.publish(
                 platform="linkedin",
                 access_token=account.access_token,
-                text=post
+                text=post,
+                image=image_path,
             )
             return {
                 "status": "success",
