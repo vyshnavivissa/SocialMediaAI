@@ -17,31 +17,38 @@ def publish_scheduled_post(post_id):
             scheduled_post.generated_post
         )
 
-        for platform in scheduled_post.platforms:
+        from services.publish_service import PublishService
 
+        posts_to_publish = {}
+        for platform in scheduled_post.platforms:
             platform_content = (
                 generated_post.generated_posts.get(
                     platform,
                     generated_post.master_caption,
                 )
             )
+            posts_to_publish[platform] = platform_content
 
-            PublishedPost.objects.create(
-                generated_post=generated_post,
-                platform=platform,
-                content=platform_content,
-                status="success",
-            )
+        results = PublishService.publish(
+            generated_post_id=generated_post.id,
+            posts=posts_to_publish,
+        )
 
-        scheduled_post.status = "published"
+        # Check if any platform publishing failed
+        has_failures = any(res.get("status") == "failed" for res in results.values())
+        if has_failures:
+            scheduled_post.status = "failed"
+        else:
+            scheduled_post.status = "published"
 
         scheduled_post.save(
             update_fields=["status"]
         )
 
         return {
-            "status": "published",
+            "status": scheduled_post.status,
             "scheduled_post_id": post_id,
+            "results": results,
         }
 
     except Exception as error:

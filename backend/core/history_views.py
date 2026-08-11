@@ -17,6 +17,15 @@ class HistoryAPIView(APIView):
                     "published_at": pub.published_at
                 })
             
+            scheduled_records = post.scheduled_posts.all()
+            scheduled_data = []
+            for sch in scheduled_records:
+                scheduled_data.append({
+                    "scheduled_time": sch.scheduled_time,
+                    "platforms": sch.platforms,
+                    "status": sch.status
+                })
+            
             data.append({
                 "id": post.id,
                 "prompt": post.prompt,
@@ -25,6 +34,7 @@ class HistoryAPIView(APIView):
                 "generated_posts": post.generated_posts,
                 "image": request.build_absolute_uri(post.image.url) if post.image else None,
                 "created_at": post.created_at,
-                "published_posts": published_data
+                "published_posts": published_data,
+                "scheduled_posts": scheduled_data
             })
         return Response(data, status=status.HTTP_200_OK)

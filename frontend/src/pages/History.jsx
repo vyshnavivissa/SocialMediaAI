@@ -28,20 +28,20 @@ function History() {
             <Navbar />
 
             <main className="simple-page">
-                <div className="simple-card" style={{ maxWidth: "1200px", width: "100%" }}>
-                    <h1>Post History</h1>
-                    <p style={{ marginBottom: "30px", color: "rgba(255, 255, 255, 0.7)" }}>
+                <div className="simple-card" style={{ maxWidth: "1200px", width: "100%", background: "#ffffff" }}>
+                    <h1 style={{ color: "#1a202c" }}>Post History</h1>
+                    <p style={{ marginBottom: "30px", color: "#4a5568" }}>
                         View your previously generated and published social media posts.
                     </p>
 
                     {loading ? (
                         <div style={{ textAlign: "center", padding: "40px" }}>
-                            <p>Loading your history...</p>
+                            <p style={{ color: "#4a5568" }}>Loading your history...</p>
                         </div>
                     ) : posts.length === 0 ? (
                         <div className="empty-history" style={{ textAlign: "center", padding: "40px" }}>
-                            <h2>No posts available</h2>
-                            <p>Generate or schedule a social media post to view it here.</p>
+                            <h2 style={{ color: "#2d3748" }}>No posts available</h2>
+                            <p style={{ color: "#718096" }}>Generate or schedule a social media post to view it here.</p>
                         </div>
                     ) : (
                         <div style={{
@@ -52,18 +52,17 @@ function History() {
                         }}>
                             {posts.map((post) => (
                                 <div key={post.id} style={{
-                                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                                    border: "1px solid #e2e8f0",
                                     borderRadius: "16px",
                                     overflow: "hidden",
-                                    background: "rgba(255, 255, 255, 0.05)",
-                                    backdropFilter: "blur(10px)",
+                                    background: "#ffffff",
                                     display: "flex",
                                     flexDirection: "column",
-                                    boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.2)",
+                                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
                                     textAlign: "left"
                                 }}>
                                     {post.image ? (
-                                        <div style={{ height: "180px", overflow: "hidden", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                                        <div style={{ height: "180px", overflow: "hidden", borderBottom: "1px solid #e2e8f0" }}>
                                             <img
                                                 src={post.image}
                                                 alt="Generated preview"
@@ -77,20 +76,20 @@ function History() {
                                             display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center",
-                                            borderBottom: "1px solid rgba(255, 255, 255, 0.1)"
+                                            borderBottom: "1px solid #e2e8f0"
                                         }}>
                                             <span style={{ fontSize: "3rem" }}>📝</span>
                                         </div>
                                     )}
 
                                     <div style={{ padding: "20px", flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                                        <div style={{ fontSize: "0.8rem", color: "rgba(255, 255, 255, 0.5)", marginBottom: "8px" }}>
+                                        <div style={{ fontSize: "0.8rem", color: "#718096", marginBottom: "8px" }}>
                                             Generated on {new Date(post.created_at).toLocaleDateString()} at {new Date(post.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
 
                                         <div style={{ marginBottom: "12px" }}>
-                                            <strong style={{ fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.8)" }}>Prompt: </strong>
-                                            <span style={{ fontSize: "0.9rem", fontStyle: "italic", color: "rgba(255, 255, 255, 0.7)" }}>
+                                            <strong style={{ fontSize: "0.9rem", color: "#2d3748" }}>Prompt: </strong>
+                                            <span style={{ fontSize: "0.9rem", fontStyle: "italic", color: "#4a5568" }}>
                                                 "{post.prompt}"
                                             </span>
                                         </div>
@@ -99,8 +98,9 @@ function History() {
                                             maxHeight: "120px",
                                             overflowY: "auto",
                                             fontSize: "0.9rem",
-                                            color: "#e2e8f0",
-                                            background: "rgba(0, 0, 0, 0.2)",
+                                            color: "#2d3748",
+                                            background: "#f7fafc",
+                                            border: "1px solid #e2e8f0",
                                             padding: "12px",
                                             borderRadius: "8px",
                                             marginBottom: "16px",
@@ -108,14 +108,14 @@ function History() {
                                         }}>
                                             {post.master_caption}
                                             {post.hashtags && post.hashtags.length > 0 && (
-                                                <div style={{ marginTop: "8px", color: "#63b3ed", display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                                                <div style={{ marginTop: "8px", color: "#3182ce", display: "flex", flexWrap: "wrap", gap: "6px" }}>
                                                     {post.hashtags.map((h, i) => <span key={i}>#{h}</span>)}
                                                 </div>
                                             )}
                                         </div>
 
                                         <div>
-                                            <strong style={{ fontSize: "0.85rem", color: "rgba(255, 255, 255, 0.8)", display: "block", marginBottom: "8px" }}>
+                                            <strong style={{ fontSize: "0.85rem", color: "#2d3748", display: "block", marginBottom: "8px" }}>
                                                 Publishing Status:
                                             </strong>
                                             {post.published_posts && post.published_posts.length > 0 ? (
@@ -132,7 +132,7 @@ function History() {
                                                                 alignItems: "center",
                                                                 gap: "4px",
                                                                 background: pub.status === "success" ? "rgba(72, 187, 120, 0.2)" : "rgba(245, 101, 101, 0.2)",
-                                                                color: pub.status === "success" ? "#48bb78" : "#f56565",
+                                                                color: pub.status === "success" ? "#38a169" : "#e53e3e",
                                                                 border: pub.status === "success" ? "1px solid rgba(72, 187, 120, 0.4)" : "1px solid rgba(245, 101, 101, 0.4)"
                                                             }}
                                                         >
@@ -141,11 +141,53 @@ function History() {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <span style={{ fontSize: "0.85rem", color: "rgba(255, 255, 255, 0.4)", fontStyle: "italic" }}>
+                                                <span style={{ fontSize: "0.85rem", color: "#a0aec0", fontStyle: "italic" }}>
                                                     Not published yet
                                                 </span>
                                             )}
                                         </div>
+
+                                        {post.scheduled_posts && post.scheduled_posts.length > 0 && (
+                                            <div style={{ marginTop: "16px", borderTop: "1px solid #e2e8f0", paddingTop: "12px" }}>
+                                                <strong style={{ fontSize: "0.85rem", color: "#2d3748", display: "block", marginBottom: "8px" }}>
+                                                    Scheduled Runs:
+                                                </strong>
+                                                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                                                    {post.scheduled_posts.map((sch, idx) => (
+                                                        <div key={idx} style={{ fontSize: "0.85rem", color: "#4a5568" }}>
+                                                            <div>
+                                                                📅 <strong>Time:</strong> {new Date(sch.scheduled_time).toLocaleString()}
+                                                            </div>
+                                                            <div style={{ marginTop: "4px", display: "flex", gap: "6px", alignItems: "center" }}>
+                                                                💻 <strong>Platforms:</strong> 
+                                                                {sch.platforms.map((p, i) => (
+                                                                    <span key={i} style={{
+                                                                        padding: "2px 6px",
+                                                                        background: "#edf2f7",
+                                                                        borderRadius: "4px",
+                                                                        fontSize: "0.75rem",
+                                                                        color: "#4a5568"
+                                                                    }}>
+                                                                        {p}
+                                                                    </span>
+                                                                ))}
+                                                                <span style={{
+                                                                    marginLeft: "auto",
+                                                                    padding: "2px 8px",
+                                                                    borderRadius: "10px",
+                                                                    fontSize: "0.75rem",
+                                                                    fontWeight: "bold",
+                                                                    background: sch.status === "pending" ? "rgba(236, 201, 75, 0.2)" : sch.status === "published" ? "rgba(72, 187, 120, 0.2)" : "rgba(245, 101, 101, 0.2)",
+                                                                    color: sch.status === "pending" ? "#d69e2e" : sch.status === "published" ? "#38a169" : "#e53e3e",
+                                                                }}>
+                                                                    {sch.status.toUpperCase()}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
