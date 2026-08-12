@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-
-// We'll import axios standardly
 import axiosInstance from "axios";
 import toast from "react-hot-toast";
+import { FaTwitter, FaFacebook, FaInstagram, FaLinkedin, FaCheckCircle, FaUnlink, FaLink } from "react-icons/fa";
 
 function Settings() {
     const [connectedPlatforms, setConnectedPlatforms] = useState({});
@@ -49,9 +48,9 @@ function Settings() {
             await axiosInstance.delete(
                 `${import.meta.env.VITE_API_URL}/oauth/${platform}/disconnect/`
             );
-            setConnectedPlatforms(prev => ({
+            setConnectedPlatforms((prev) => ({
                 ...prev,
-                [platform]: false
+                [platform]: false,
             }));
             toast.success(`${platform.toUpperCase()} account disconnected.`);
         } catch (error) {
@@ -60,32 +59,59 @@ function Settings() {
         }
     };
 
+    const getIcon = (platformId) => {
+        switch (platformId) {
+            case "twitter":
+                return <FaTwitter style={{ color: "#1d9bf0", fontSize: "20px" }} />;
+            case "facebook":
+                return <FaFacebook style={{ color: "#0866ff", fontSize: "20px" }} />;
+            case "instagram":
+                return <FaInstagram style={{ color: "#e1306c", fontSize: "20px" }} />;
+            case "linkedin":
+                return <FaLinkedin style={{ color: "#0a66c2", fontSize: "20px" }} />;
+            default:
+                return null;
+        }
+    };
+
     const renderSettingItem = (platformName, platformId) => {
         const isConnected = !!connectedPlatforms[platformId];
 
         return (
             <div className="setting-item" key={platformId}>
-                <div>
-                    <h3>{platformName}</h3>
-                    <span className={isConnected ? "status-connected" : "status-disconnected"}>
-                        {isConnected ? "Account connected" : "Account not connected"}
-                    </span>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                    <div style={{ width: "42px", height: "42px", borderRadius: "10px", background: "rgba(255, 255, 255, 0.04)", border: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {getIcon(platformId)}
+                    </div>
+                    <div className="setting-info">
+                        <h3>{platformName}</h3>
+                        <span className={isConnected ? "status-connected" : "status-disconnected"}>
+                            {isConnected ? (
+                                <>
+                                    <FaCheckCircle style={{ color: "#10b981" }} /> Connected & Authorized
+                                </>
+                            ) : (
+                                "Not Connected"
+                            )}
+                        </span>
+                    </div>
                 </div>
+
                 {isConnected ? (
-                    <button 
+                    <button
+                        type="button"
                         className="disconnect-button"
                         onClick={() => handleDisconnect(platformId)}
-                        style={{ backgroundColor: "#ef4444", color: "white", padding: "6px 12px", borderRadius: "4px", cursor: "pointer" }}
                     >
-                        Disconnect
+                        <FaUnlink style={{ marginRight: "6px" }} /> Disconnect
                     </button>
                 ) : (
-                    <button 
+                    <button
+                        type="button"
                         className="connect-button"
                         onClick={() => handleConnect(platformId)}
-                        style={{ backgroundColor: "#3b82f6", color: "white", padding: "6px 12px", borderRadius: "4px", cursor: "pointer" }}
                     >
-                        Connect
+                        <FaLink style={{ marginRight: "6px" }} /> Connect Account
                     </button>
                 )}
             </div>
@@ -98,13 +124,15 @@ function Settings() {
 
             <main className="simple-page">
                 <div className="simple-card">
-                    <h1>Settings</h1>
-                    <p style={{ marginBottom: "20px" }}>
-                        Manage your SocialAI application settings and connected social media accounts.
+                    <h1>Account Integration Settings</h1>
+                    <p className="page-subtitle">
+                        Connect your social media accounts to enable one-click publishing and automated dispatches.
                     </p>
 
                     {loading ? (
-                        <div className="loading-placeholder">Loading account status...</div>
+                        <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>
+                            Loading account connection status...
+                        </div>
                     ) : (
                         <div className="settings-list">
                             {renderSettingItem("Twitter / X", "twitter")}

@@ -1,193 +1,81 @@
 import { useState } from "react";
-
 import axios from "axios";
-
 import toast from "react-hot-toast";
-
-import { FaCloudUploadAlt } from "react-icons/fa";
-
+import { FaCloudUploadAlt, FaMagic, FaPaperPlane, FaClock, FaTrash, FaSpinner } from "react-icons/fa";
 import PlatformSelector from "./PlatformSelector";
 
-
 function ComposePost({
-
     image,
     setImage,
-
     prompt,
     setPrompt,
-
     platforms,
     setPlatforms,
-
     generatedData,
     setGeneratedData,
-
 }) {
-
-    const [loading, setLoading] =
-        useState(false);
-
-    const [scheduledTime, setScheduledTime] =
-        useState("");
-
+    const [loading, setLoading] = useState(false);
+    const [scheduledTime, setScheduledTime] = useState("");
 
     // Generate AI content
-
     const generateContent = async () => {
-
         if (!prompt.trim()) {
-
-            toast.error(
-                "Enter a content idea."
-            );
-
+            toast.error("Enter a content idea.");
             return;
-
         }
-
 
         if (platforms.length === 0) {
-
-            toast.error(
-                "Select at least one platform."
-            );
-
+            toast.error("Select at least one platform.");
             return;
-
         }
 
-
-        const formData =
-            new FormData();
-
-
-        formData.append(
-            "prompt",
-            prompt
-        );
-
-
-        platforms.forEach(
-
-            (platform) => {
-
-                formData.append(
-                    "platforms",
-                    platform
-                );
-
-            }
-
-        );
-
+        const formData = new FormData();
+        formData.append("prompt", prompt);
+        platforms.forEach((platform) => {
+            formData.append("platforms", platform);
+        });
 
         if (image) {
-
-            formData.append(
-                "image",
-                image
-            );
-
+            formData.append("image", image);
         }
-
 
         try {
-
             setLoading(true);
-
-
-            const response =
-                await axios.post(
-
-                    `${import.meta.env.VITE_API_URL}/api/generate/`,
-
-                    formData
-
-                );
-
-
-            setGeneratedData(
-                response.data
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/generate/`,
+                formData
             );
-
-
-            toast.success(
-                "AI content generated!"
-            );
-
-        }
-
-        catch (error) {
-
-            console.error(
-
-                error.response?.data
-                || error.message
-
-            );
-
-
+            setGeneratedData(response.data);
+            toast.success("AI content generated!");
+        } catch (error) {
+            console.error(error.response?.data || error.message);
             toast.error(
-
-                error.response?.data?.message
-                || "Content generation failed."
-
+                error.response?.data?.message || "Content generation failed."
             );
-
-        }
-
-        finally {
-
+        } finally {
             setLoading(false);
-
         }
-
     };
 
-
     // Publish immediately
-
     const publishPost = async () => {
-
         if (!generatedData) {
-
-            toast.error(
-                "Generate content first."
-            );
-
+            toast.error("Generate content first.");
             return;
-
         }
-
 
         if (platforms.length === 0) {
-
-            toast.error(
-                "Select at least one platform."
-            );
-
+            toast.error("Select at least one platform.");
             return;
-
         }
 
-
         try {
-
             const response = await axios.post(
-
                 `${import.meta.env.VITE_API_URL}/api/publish/`,
-
                 {
-
-                    generated_post:
-                        generatedData.id,
-
-                    platforms:
-                        platforms,
-
+                    generated_post: generatedData.id,
+                    platforms: platforms,
                 }
-
             );
 
             const results = response.data?.results || {};
@@ -214,377 +102,177 @@ function ComposePost({
                     { duration: 6000 }
                 );
             }
-
-        }
-
-        catch (error) {
-
-            console.error(
-
-                error.response?.data
-                || error.message
-
-            );
-
-
+        } catch (error) {
+            console.error(error.response?.data || error.message);
             toast.error(
-
-                error.response?.data?.message
-                || "Publishing failed."
-
+                error.response?.data?.message || "Publishing failed."
             );
-
         }
-
     };
-
 
     // Schedule post
-
     const schedulePost = async () => {
-
         if (!generatedData) {
-
-            toast.error(
-                "Generate content first."
-            );
-
+            toast.error("Generate content first.");
             return;
-
         }
-
 
         if (platforms.length === 0) {
-
-            toast.error(
-                "Select at least one platform."
-            );
-
+            toast.error("Select at least one platform.");
             return;
-
         }
-
 
         if (!scheduledTime) {
-
-            toast.error(
-                "Select a future date and time."
-            );
-
+            toast.error("Select a future date and time.");
             return;
-
         }
 
+        const selectedDate = new Date(scheduledTime);
 
-        const selectedDate =
-            new Date(
-                scheduledTime
-            );
-
-
-        if (
-            selectedDate <=
-            new Date()
-        ) {
-
-            toast.error(
-                "Select a future date and time."
-            );
-
+        if (selectedDate <= new Date()) {
+            toast.error("Select a future date and time.");
             return;
-
         }
-
 
         try {
-
             await axios.post(
-
                 `${import.meta.env.VITE_API_URL}/schedule/`,
-
                 {
-
-                    generated_post:
-                        generatedData.id,
-
-                    scheduled_time:
-                        selectedDate
-                        .toISOString(),
-
-                    platforms:
-                        platforms,
-
+                    generated_post: generatedData.id,
+                    scheduled_time: selectedDate.toISOString(),
+                    platforms: platforms,
                 }
-
             );
 
-
-            toast.success(
-                "Post scheduled successfully!"
-            );
-
-
+            toast.success("Post scheduled successfully!");
             setScheduledTime("");
-
-        }
-
-        catch (error) {
-
-            console.error(
-
-                error.response?.data
-                || error.message
-
-            );
-
-
+        } catch (error) {
+            console.error(error.response?.data || error.message);
             toast.error(
-
-                error.response?.data?.message
-                || "Scheduling failed."
-
+                error.response?.data?.message || "Scheduling failed."
             );
-
         }
-
     };
 
+    const formatFileSize = (bytes) => {
+        if (!bytes) return "";
+        const kb = bytes / 1024;
+        if (kb < 1024) return `${kb.toFixed(1)} KB`;
+        return `${(kb / 1024).toFixed(1)} MB`;
+    };
 
     return (
-
         <section>
-
             <h1 className="page-heading">
-
-                Compose Your Post
-
+                Compose Post <span className="page-heading-badge">Step 1 of 2</span>
             </h1>
 
-
             <div className="compose-card">
-
-
                 <PlatformSelector
-
-                    platforms={
-                        platforms
-                    }
-
-                    setPlatforms={
-                        setPlatforms
-                    }
-
+                    platforms={platforms}
+                    setPlatforms={setPlatforms}
                 />
 
-
                 <div className="form-section">
-
-                    <label
-                        className="section-label"
-                    >
-
-                        2. Content Idea
-
+                    <label className="section-label">
+                        <span className="step-num">2</span> Content Idea & Prompt
                     </label>
-
-
                     <textarea
-
-                        value={
-                            prompt
-                        }
-
-                        onChange={
-
-                            (event) =>
-
-                                setPrompt(
-
-                                    event
-                                    .target
-                                    .value
-
-                                )
-
-                        }
-
-                        placeholder={
-                            "Describe the social media content you want AI to generate..."
-                        }
-
+                        value={prompt}
+                        onChange={(event) => setPrompt(event.target.value)}
+                        placeholder="Describe the content idea (e.g. 'Announce our new AI feature release with high energy and hashtags')..."
+                        rows={4}
                     />
-
+                    <div style={{ textAlign: "right", fontSize: "12px", color: "var(--text-muted)", marginTop: "4px" }}>
+                        {prompt.length} characters
+                    </div>
                 </div>
-
 
                 <div className="form-section">
-
-                    <label
-                        className="section-label"
-                    >
-
-                        3. Add Media
-
+                    <label className="section-label">
+                        <span className="step-num">3</span> Media Asset (Optional)
                     </label>
 
-
-                    <label
-                        className="upload-area"
-                    >
-
-                        <FaCloudUploadAlt />
-
-
-                        <span>
-
-                            {
-
-                                image
-
-                                    ? image.name
-
-                                    : "Upload Image"
-
-                            }
-
-                        </span>
-
-
-                        <input
-
-                            type="file"
-
-                            accept="image/*"
-
-                            hidden
-
-                            onChange={
-
-                                (event) => {
-
-                                    const file =
-
-                                        event
-                                        .target
-                                        .files[0];
-
-
-                                    if (file) {
-
-                                        setImage(
-                                            file
-                                        );
-
-                                    }
-
-                                }
-
-                            }
-
-                        />
-
-                    </label>
-
+                    {image ? (
+                        <div className="uploaded-preview-badge">
+                            <img src={URL.createObjectURL(image)} alt="Preview thumbnail" />
+                            <div className="file-info">
+                                <div className="file-name">{image.name}</div>
+                                <div className="file-size">{formatFileSize(image.size)}</div>
+                            </div>
+                            <button
+                                type="button"
+                                className="remove-file-btn"
+                                onClick={() => setImage(null)}
+                                title="Remove image"
+                            >
+                                <FaTrash />
+                            </button>
+                        </div>
+                    ) : (
+                        <label className="upload-area">
+                            <FaCloudUploadAlt />
+                            <span style={{ fontWeight: "600" }}>Click or drag to upload media</span>
+                            <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Supports PNG, JPG, WEBP</span>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                hidden
+                                onChange={(event) => {
+                                    const file = event.target.files[0];
+                                    if (file) setImage(file);
+                                }}
+                            />
+                        </label>
+                    )}
                 </div>
 
-
                 <button
-
                     type="button"
-
                     className="generate-button"
-
-                    onClick={
-                        generateContent
-                    }
-
-                    disabled={
-                        loading
-                    }
-
+                    onClick={generateContent}
+                    disabled={loading}
                 >
-
-                    {
-
-                        loading
-
-                            ? "Generating..."
-
-                            : "Generate AI Content"
-
-                    }
-
+                    {loading ? (
+                        <>
+                            <FaSpinner className="fa-spin" style={{ animation: "spin 1s linear infinite" }} /> Generating AI Magic...
+                        </>
+                    ) : (
+                        <>
+                            <FaMagic /> Generate AI Content
+                        </>
+                    )}
                 </button>
 
+                <div className="action-divider">
+                    <span>Dispatch Actions</span>
+                </div>
 
                 <button
-
                     type="button"
-
                     className="publish-button"
-
-                    onClick={
-                        publishPost
-                    }
-
+                    onClick={publishPost}
                 >
-
-                    Publish Post Now
-
+                    <FaPaperPlane /> Publish Post Now
                 </button>
-
 
                 <div className="schedule-row">
-
-
                     <input
-
                         type="datetime-local"
-
-                        value={
-                            scheduledTime
-                        }
-
-                        onChange={
-
-                            (event) =>
-
-                                setScheduledTime(
-
-                                    event
-                                    .target
-                                    .value
-
-                                )
-
-                        }
-
+                        value={scheduledTime}
+                        onChange={(event) => setScheduledTime(event.target.value)}
                     />
-
-
                     <button
-
                         type="button"
-
-                        onClick={
-                            schedulePost
-                        }
-
+                        className="schedule-button"
+                        onClick={schedulePost}
                     >
-
-                        Schedule Post
-
+                        <FaClock /> Schedule
                     </button>
-
                 </div>
-
             </div>
-
         </section>
-
     );
-
 }
-
 
 export default ComposePost;
