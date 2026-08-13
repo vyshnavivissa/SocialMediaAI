@@ -6,11 +6,14 @@ from oauth.oauth_factory import OAuthFactory
 class OAuthService:
 
     @staticmethod
-    def get_login_url(platform: str):
+    def get_login_url(platform: str, state: str = None):
 
         provider = OAuthFactory.get_provider(platform)
 
-        return provider.generate_login_url()
+        try:
+            return provider.generate_login_url(state=state)
+        except TypeError:
+            return provider.generate_login_url()
 
     @staticmethod
     def exchange_code(platform: str, code: str):

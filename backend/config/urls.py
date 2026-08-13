@@ -23,13 +23,11 @@ from django.urls import include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("core.urls")),
-    path("mock/",include("mock_api.urls")),
-
+    path("api/oauth/", include("core.oauth_urls")),
+    path("api/schedule/", include("core.schedule_urls")),
     path("oauth/", include("core.oauth_urls")),
-    path(
-    "schedule/",
-    include("core.schedule_urls"),
-),
+    path("schedule/", include("core.schedule_urls")),
+    path("mock/", include("mock_api.urls")),
 ]
 
 if settings.DEBUG:

@@ -16,7 +16,7 @@ class PublishService:
     }
 
     @classmethod
-    def publish(cls, generated_post_id, posts: dict):
+    def publish(cls, generated_post_id, posts: dict, user=None):
 
         results = {}
 
@@ -44,6 +44,7 @@ class PublishService:
                 result = tool.invoke(args)
 
                 PublishedPost.objects.create(
+                    user=user if user and user.is_authenticated else None,
                     generated_post=generated_post,
                     platform=platform,
                     content=post,

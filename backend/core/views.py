@@ -27,6 +27,7 @@ class GenerateAPIView(APIView):
                 image=serializer.validated_data.get("image"),
                 prompt=serializer.validated_data["prompt"],
                 platforms=serializer.validated_data["platforms"],
+                user=request.user,
             )
 
             response_serializer = GenerateResponseSerializer(data=result)

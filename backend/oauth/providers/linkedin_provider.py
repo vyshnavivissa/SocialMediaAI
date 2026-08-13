@@ -23,15 +23,18 @@ class LinkedInProvider(BaseOAuthProvider):
 
         self.redirect_uri = os.getenv("LINKEDIN_REDIRECT_URI")
 
-    def generate_login_url(self):
+    def generate_login_url(self, state: str = None):
 
-        return (
+        url = (
             f"{self.AUTH_URL}"
             f"?response_type=code"
             f"&client_id={self.client_id}"
             f"&redirect_uri={self.redirect_uri}"
             f"&scope=openid profile email w_member_social"
         )
+        if state:
+            url += f"&state={state}"
+        return url
 
     def exchange_code(self, code: str):
         import requests

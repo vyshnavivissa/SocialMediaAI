@@ -25,7 +25,8 @@ class PublishAPIView(APIView):
         result = PublishService.publish(
             generated_post_id=serializer.validated_data["generated_post_id"],
             posts=serializer.validated_data["posts"],
-            )
+            user=request.user,
+        )
 
         response = PublishResponseSerializer(
             data={

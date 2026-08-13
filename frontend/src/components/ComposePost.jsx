@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 import { FaCloudUploadAlt, FaMagic, FaPaperPlane, FaClock, FaTrash, FaSpinner } from "react-icons/fa";
 import PlatformSelector from "./PlatformSelector";
@@ -41,10 +41,7 @@ function ComposePost({
 
         try {
             setLoading(true);
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/generate/`,
-                formData
-            );
+            const response = await api.post("/generate/", formData);
             setGeneratedData(response.data);
             toast.success("AI content generated!");
         } catch (error) {
@@ -70,13 +67,10 @@ function ComposePost({
         }
 
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/publish/`,
-                {
-                    generated_post: generatedData.id,
-                    platforms: platforms,
-                }
-            );
+            const response = await api.post("/publish/", {
+                generated_post: generatedData.id,
+                platforms: platforms,
+            });
 
             const results = response.data?.results || {};
             let allSuccess = true;
@@ -135,14 +129,11 @@ function ComposePost({
         }
 
         try {
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/schedule/`,
-                {
-                    generated_post: generatedData.id,
-                    scheduled_time: selectedDate.toISOString(),
-                    platforms: platforms,
-                }
-            );
+            await api.post("/schedule/", {
+                generated_post: generatedData.id,
+                scheduled_time: selectedDate.toISOString(),
+                platforms: platforms,
+            });
 
             toast.success("Post scheduled successfully!");
             setScheduledTime("");

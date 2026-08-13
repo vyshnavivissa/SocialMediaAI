@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import axiosInstance from "axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 import { FaTwitter, FaFacebook, FaInstagram, FaLinkedin, FaCheckCircle, FaUnlink, FaLink } from "react-icons/fa";
 
@@ -12,9 +12,7 @@ function Settings() {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const response = await axiosInstance.get(
-                    `${import.meta.env.VITE_API_URL}/oauth/status/`
-                );
+                const response = await api.get("/oauth/status/");
                 setConnectedPlatforms(response.data);
             } catch (error) {
                 console.error("Failed to fetch connection status:", error);
@@ -28,9 +26,7 @@ function Settings() {
     // Connect flow
     const handleConnect = async (platform) => {
         try {
-            const response = await axiosInstance.get(
-                `${import.meta.env.VITE_API_URL}/oauth/${platform}/login/`
-            );
+            const response = await api.get(`/oauth/${platform}/login/`);
             if (response.data && response.data.login_url) {
                 window.location.href = response.data.login_url;
             } else {
@@ -45,9 +41,7 @@ function Settings() {
     // Disconnect flow
     const handleDisconnect = async (platform) => {
         try {
-            await axiosInstance.delete(
-                `${import.meta.env.VITE_API_URL}/oauth/${platform}/disconnect/`
-            );
+            await api.delete(`/oauth/${platform}/disconnect/`);
             setConnectedPlatforms((prev) => ({
                 ...prev,
                 [platform]: false,

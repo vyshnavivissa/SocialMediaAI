@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import Navbar from "../components/Navbar";
 import { FaCalendarAlt, FaCheckCircle, FaExclamationCircle, FaClock, FaHistory, FaQuoteLeft } from "react-icons/fa";
 
@@ -10,9 +10,7 @@ function History() {
     useEffect(() => {
         const fetchHistory = async () => {
             try {
-                const response = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/api/history/`
-                );
+                const response = await api.get("/history/");
                 setPosts(response.data);
             } catch (error) {
                 console.error("Error fetching history:", error);

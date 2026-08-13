@@ -1,8 +1,10 @@
 import os
-
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
+import dj_database_url
+
 
 
 # ==========================================
@@ -59,6 +61,8 @@ INSTALLED_APPS = [
     # Third-party applications
 
     "rest_framework",
+
+    "rest_framework_simplejwt",
 
     "corsheaders",
 
@@ -163,20 +167,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 # ==========================================
 
 DATABASES = {
-
-    "default": {
-
-        "ENGINE":
-
-            "django.db.backends.sqlite3",
-
-
-        "NAME":
-
-            BASE_DIR / "db.sqlite3",
-
-    }
-
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
@@ -312,11 +307,23 @@ DEFAULT_AUTO_FIELD = (
 # ==========================================
 
 REST_FRAMEWORK = {
-
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
     "EXCEPTION_HANDLER":
-
         "core.exception_handler.custom_exception_handler",
+}
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 

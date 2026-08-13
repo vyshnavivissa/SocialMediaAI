@@ -1,7 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class GeneratedPost(models.Model):
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="generated_posts",
+        null=True,
+        blank=True,
+    )
 
     image = models.ImageField(
         upload_to="generated_posts/",
@@ -27,6 +36,8 @@ class GeneratedPost(models.Model):
 
     def __str__(self):
         return f"Generated Post #{self.id}"
+
+
 class PublishedPost(models.Model):
 
     PLATFORM_CHOICES = [
@@ -40,6 +51,14 @@ class PublishedPost(models.Model):
         ("success", "Success"),
         ("failed", "Failed"),
     ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="published_posts",
+        null=True,
+        blank=True,
+    )
 
     generated_post = models.ForeignKey(
         GeneratedPost,
@@ -65,6 +84,8 @@ class PublishedPost(models.Model):
 
     def __str__(self):
         return f"{self.platform} - {self.status}"
+
+
 class SocialAccount(models.Model):
 
     PLATFORM_CHOICES = [
@@ -73,6 +94,14 @@ class SocialAccount(models.Model):
         ("facebook", "Facebook"),
         ("instagram", "Instagram"),
     ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="social_accounts",
+        null=True,
+        blank=True,
+    )
 
     platform = models.CharField(
         max_length=20,
@@ -105,6 +134,7 @@ class SocialAccount(models.Model):
     def __str__(self):
         return f"{self.platform} - {self.account_name}"
     
+
 class ScheduledPost(models.Model):
 
     STATUS_CHOICES = [
@@ -112,6 +142,14 @@ class ScheduledPost(models.Model):
         ("published", "Published"),
         ("failed", "Failed"),
     ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="scheduled_posts",
+        null=True,
+        blank=True,
+    )
 
     generated_post = models.ForeignKey(
         GeneratedPost,
@@ -135,3 +173,4 @@ class ScheduledPost(models.Model):
 
     def __str__(self):
         return f"Scheduled #{self.id} - {self.status}"
+

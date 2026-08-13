@@ -12,9 +12,11 @@ class ScheduleService:
         generated_post,
         scheduled_time,
         platforms,
+        user=None,
     ):
 
         schedule = ScheduledPost.objects.create(
+            user=user if user and user.is_authenticated else None,
             generated_post=generated_post,
             scheduled_time=scheduled_time,
             platforms=platforms,

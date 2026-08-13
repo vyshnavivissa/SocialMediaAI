@@ -29,6 +29,7 @@ class SchedulePostAPIView(APIView):
             generated_post=generated_post,
             scheduled_time=request.data["scheduled_time"],
             platforms=request.data["platforms"],
+            user=request.user,
         )
 
         serializer = SchedulePostSerializer(schedule)
@@ -37,12 +38,15 @@ class SchedulePostAPIView(APIView):
             serializer.data,
             status=status.HTTP_201_CREATED,
         )
+
+
 class ScheduleHistoryAPIView(APIView):
 
     def get(self, request):
 
         scheduled_posts = (
             ScheduledPost.objects
+            .filter(user=request.user)
             .select_related("generated_post")
             .order_by("-created_at")
         )

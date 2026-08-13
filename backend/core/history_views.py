@@ -5,7 +5,7 @@ from core.models import GeneratedPost
 
 class HistoryAPIView(APIView):
     def get(self, request):
-        posts = GeneratedPost.objects.all().order_by("-created_at")
+        posts = GeneratedPost.objects.filter(user=request.user).order_by("-created_at")
         data = []
         for post in posts:
             published_records = post.published_posts.all()

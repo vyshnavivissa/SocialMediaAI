@@ -1,17 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 
 from oauth.oauth_service import OAuthService
 
 
 class OAuthLoginAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, platform):
 
         try:
-
-            login_url = OAuthService.get_login_url(platform)
+            state = str(request.user.id) if request.user and request.user.is_authenticated else None
+            login_url = OAuthService.get_login_url(platform, state=state)
 
             return Response(
                 {
@@ -31,10 +32,12 @@ class OAuthLoginAPIView(APIView):
 
 
 class OAuthCallbackAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, platform):
 
         code = request.GET.get("code")
+        state = request.GET.get("state")
 
         if not code:
 
@@ -53,6 +56,14 @@ class OAuthCallbackAPIView(APIView):
         access_token = token.get("access_token")
         refresh_token = token.get("refresh_token")
 
+        user_obj = None
+        if state and state.isdigit():
+            from django.contrib.auth.models import User
+            try:
+                user_obj = User.objects.get(id=int(state))
+            except User.DoesNotExist:
+                user_obj = None
+
         if access_token:
             try:
                 profile = OAuthService.get_profile(platform, access_token)
@@ -68,6 +79,7 @@ class OAuthCallbackAPIView(APIView):
 
                 from core.models import SocialAccount
                 SocialAccount.objects.update_or_create(
+                    user=user_obj,
                     platform=platform,
                     account_id=account_id,
                     defaults={
@@ -81,6 +93,7 @@ class OAuthCallbackAPIView(APIView):
                 # Fallback in case profile fetching fails
                 from core.models import SocialAccount
                 SocialAccount.objects.update_or_create(
+                    user=user_obj,
                     platform=platform,
                     account_id="temp_id",
                     defaults={
@@ -92,25 +105,34 @@ class OAuthCallbackAPIView(APIView):
                 )
 
         from django.shortcuts import redirect
-        return redirect("http://localhost:5174/settings")
+        return redirect("http://localhost:5173/settings")
 
 
 class OAuthDisconnectAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
 
     def delete(self, request, platform):
 
-        result = OAuthService.disconnect(platform)
+        from core.models import SocialAccount
+        if request.user.is_authenticated:
+            SocialAccount.objects.filter(user=request.user, platform=platform).update(connected=False)
+        else:
+            SocialAccount.objects.filter(platform=platform).update(connected=False)
 
         return Response(
-            result,
+            {"message": f"{platform} disconnected successfully"},
             status=status.HTTP_200_OK,
         )
 
 
 class OAuthStatusAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         from core.models import SocialAccount
-        accounts = SocialAccount.objects.filter(connected=True)
+        if request.user.is_authenticated:
+            accounts = SocialAccount.objects.filter(user=request.user, connected=True)
+        else:
+            accounts = SocialAccount.objects.filter(connected=True)
         connected_platforms = {a.platform: True for a in accounts}
         return Response(connected_platforms, status=status.HTTP_200_OK)
