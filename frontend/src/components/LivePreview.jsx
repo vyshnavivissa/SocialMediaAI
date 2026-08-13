@@ -137,6 +137,10 @@ function LivePreview({ image, generatedData, platforms }) {
                                     <div className="mockup-media">
                                         <img src={URL.createObjectURL(image)} alt="Post attachment preview" />
                                     </div>
+                                ) : generatedData?.image_path ? (
+                                    <div className="mockup-media">
+                                        <img src={generatedData.image_path.startsWith("http") ? generatedData.image_path : `${import.meta.env.VITE_API_URL}${generatedData.image_path}`} alt="AI Generated media preview" />
+                                    </div>
                                 ) : (
                                     <div className="mockup-media-placeholder">
                                         <FaImage />
