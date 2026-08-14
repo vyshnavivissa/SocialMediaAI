@@ -144,7 +144,7 @@ function Calendar() {
     }
 
     return (
-        <div className="app-container">
+        <div className="app-layout">
             <Navbar />
             <main className="main-content">
                 <section>

@@ -6,68 +6,49 @@ function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <header className="navbar">
-      <div className="nav-container">
-        <NavLink to="/" className="brand">
+    <aside className="sidebar">
+      <div>
+        <NavLink to="/" className="sidebar-brand">
           <div className="brand-icon">
             <FaMagic />
           </div>
-          <div>
+          <div className="brand-info">
             <span className="brand-text">SocialAI</span>
+            <span className="brand-subtext">AI Publisher</span>
           </div>
         </NavLink>
 
-        <nav className="nav-links">
-          <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              <FaChartLine style={{ fontSize: "12px" }} /> Dashboard
-            </span>
+        <nav className="sidebar-nav">
+          <NavLink to="/" className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}>
+            <FaChartLine /> <span>Dashboard</span>
           </NavLink>
-          <NavLink to="/calendar" className={({ isActive }) => (isActive ? "active" : "")}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              <FaCalendarAlt style={{ fontSize: "12px" }} /> Calendar
-            </span>
+          <NavLink to="/calendar" className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}>
+            <FaCalendarAlt /> <span>Calendar</span>
           </NavLink>
-          <NavLink to="/history" className={({ isActive }) => (isActive ? "active" : "")}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              <FaHistory style={{ fontSize: "12px" }} /> History
-            </span>
+          <NavLink to="/history" className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}>
+            <FaHistory /> <span>History</span>
           </NavLink>
-          <NavLink to="/settings" className={({ isActive }) => (isActive ? "active" : "")}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              <FaSlidersH style={{ fontSize: "12px" }} /> Settings
-            </span>
+          <NavLink to="/settings" className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}>
+            <FaSlidersH /> <span>Settings</span>
           </NavLink>
-
-          {user && (
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginLeft: "0.5rem", paddingLeft: "0.75rem", borderLeft: "1px solid var(--border-subtle)" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--primary-600)", fontSize: "0.85rem", fontWeight: "600" }}>
-                <FaUserCircle style={{ color: "var(--accent-purple)" }} /> {user.username}
-              </span>
-              <button
-                onClick={logout}
-                title="Sign Out"
-                style={{
-                  background: "rgba(239, 68, 68, 0.1)",
-                  color: "#ef4444",
-                  border: "1px solid rgba(239, 68, 68, 0.25)",
-                  padding: "0.35rem 0.75rem",
-                  borderRadius: "6px",
-                  fontSize: "0.8rem",
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  fontWeight: "600"
-                }}
-              >
-                <FaSignOutAlt /> Exit
-              </button>
-            </div>
-          )}
         </nav>
       </div>
-    </header>
+
+      {user && (
+        <div className="sidebar-footer">
+          <div className="user-profile">
+            <FaUserCircle className="user-avatar" />
+            <div className="user-info">
+              <span className="username">{user.username}</span>
+              <span className="user-role">Free Account</span>
+            </div>
+          </div>
+          <button onClick={logout} className="logout-btn" title="Sign Out">
+            <FaSignOutAlt /> Exit
+          </button>
+        </div>
+      )}
+    </aside>
   );
 }
 

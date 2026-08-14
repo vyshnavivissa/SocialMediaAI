@@ -23,10 +23,10 @@ function History() {
     }, []);
 
     return (
-        <>
+        <div className="app-layout">
             <Navbar />
 
-            <main className="simple-page">
+            <main className="main-content">
                 <div className="simple-card">
                     <h1>Post History</h1>
                     <p className="page-subtitle">
@@ -136,7 +136,7 @@ function History() {
                     )}
                 </div>
             </main>
-        </>
+        </div>
     );
 }
 

@@ -39,75 +39,30 @@ function Dashboard() {
 
 
     return (
-
-        <>
-
+        <div className="app-layout">
             <Navbar />
 
+            <main className="main-content">
+                <div className="dashboard">
+                    <ComposePost
+                        image={image}
+                        setImage={setImage}
+                        prompt={prompt}
+                        setPrompt={setPrompt}
+                        platforms={platforms}
+                        setPlatforms={setPlatforms}
+                        generatedData={generatedData}
+                        setGeneratedData={setGeneratedData}
+                    />
 
-            <main
-                className="
-                dashboard
-                "
-            >
-
-                <ComposePost
-
-                    image={
-                        image
-                    }
-
-                    setImage={
-                        setImage
-                    }
-
-                    prompt={
-                        prompt
-                    }
-
-                    setPrompt={
-                        setPrompt
-                    }
-
-                    platforms={
-                        platforms
-                    }
-
-                    setPlatforms={
-                        setPlatforms
-                    }
-
-                    generatedData={
-                        generatedData
-                    }
-
-                    setGeneratedData={
-                        setGeneratedData
-                    }
-
-                />
-
-
-                <LivePreview
-
-                    image={
-                        image
-                    }
-
-                    generatedData={
-                        generatedData
-                    }
-
-                    platforms={
-                        platforms
-                    }
-
-                />
-
+                    <LivePreview
+                        image={image}
+                        generatedData={generatedData}
+                        platforms={platforms}
+                    />
+                </div>
             </main>
-
-        </>
-
+        </div>
     );
 
 }

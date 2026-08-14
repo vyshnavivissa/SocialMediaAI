@@ -5,12 +5,12 @@ import { FaCloudUploadAlt, FaMagic, FaPaperPlane, FaClock, FaTrash, FaSpinner, F
 import PlatformSelector from "./PlatformSelector";
 
 const TONE_OPTIONS = [
-    { id: "casual", label: "Casual", icon: "😊" },
-    { id: "professional", label: "Professional", icon: "💼" },
-    { id: "witty", label: "Witty / Humorous", icon: "😄" },
-    { id: "promotional", label: "Promotional", icon: "📢" },
-    { id: "storytelling", label: "Storytelling", icon: "📖" },
-    { id: "urgent", label: "Urgent / FOMO", icon: "🔥" },
+    { id: "casual", label: "Casual" },
+    { id: "professional", label: "Professional" },
+    { id: "witty", label: "Witty / Humorous" },
+    { id: "promotional", label: "Promotional" },
+    { id: "storytelling", label: "Storytelling" },
+    { id: "urgent", label: "Urgent / FOMO" },
 ];
 
 const LANGUAGE_OPTIONS = [
@@ -237,7 +237,7 @@ function ComposePost({
                                         transition: "all 0.2s ease",
                                     }}
                                 >
-                                    {t.icon} {t.label}
+                                    {t.label}
                                 </button>
                             ))}
                         </div>

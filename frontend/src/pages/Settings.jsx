@@ -113,10 +113,10 @@ function Settings() {
     };
 
     return (
-        <>
+        <div className="app-layout">
             <Navbar />
 
-            <main className="simple-page">
+            <main className="main-content">
                 <div className="simple-card">
                     <h1>Account Integration Settings</h1>
                     <p className="page-subtitle">
@@ -137,7 +137,7 @@ function Settings() {
                     )}
                 </div>
             </main>
-        </>
+        </div>
     );
 }
 
