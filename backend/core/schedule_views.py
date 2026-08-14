@@ -40,18 +40,27 @@ class SchedulePostAPIView(APIView):
         )
 
 
+from .serializers import SchedulePostSerializer, SchedulePostDetailSerializer
+
 class ScheduleHistoryAPIView(APIView):
 
     def get(self, request):
+        if request.user.is_authenticated:
+            scheduled_posts = (
+                ScheduledPost.objects
+                .filter(user=request.user)
+                .select_related("generated_post")
+                .order_by("-scheduled_time")
+            )
+        else:
+            scheduled_posts = (
+                ScheduledPost.objects
+                .all()
+                .select_related("generated_post")
+                .order_by("-scheduled_time")
+            )
 
-        scheduled_posts = (
-            ScheduledPost.objects
-            .filter(user=request.user)
-            .select_related("generated_post")
-            .order_by("-created_at")
-        )
-
-        serializer = SchedulePostSerializer(
+        serializer = SchedulePostDetailSerializer(
             scheduled_posts,
             many=True,
         )
@@ -60,3 +69,33 @@ class ScheduleHistoryAPIView(APIView):
             serializer.data,
             status=status.HTTP_200_OK,
         )
+
+
+class ScheduleUpdateAPIView(APIView):
+
+    def patch(self, request, pk):
+        try:
+            scheduled_post = ScheduledPost.objects.get(pk=pk)
+        except ScheduledPost.DoesNotExist:
+            return Response({"error": "Scheduled post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if "scheduled_time" in request.data:
+            scheduled_post.scheduled_time = request.data["scheduled_time"]
+        if "platforms" in request.data:
+            scheduled_post.platforms = request.data["platforms"]
+        if "status" in request.data:
+            scheduled_post.status = request.data["status"]
+
+        scheduled_post.save()
+
+        serializer = SchedulePostDetailSerializer(scheduled_post)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        try:
+            scheduled_post = ScheduledPost.objects.get(pk=pk)
+        except ScheduledPost.DoesNotExist:
+            return Response({"error": "Scheduled post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        scheduled_post.delete()
+        return Response({"message": "Scheduled post deleted successfully"}, status=status.HTTP_200_OK)

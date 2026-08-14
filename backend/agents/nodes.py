@@ -18,10 +18,16 @@ def strategy_caption_agent_node(state: AgentState) -> Dict:
     """Strategy & Master Caption Agent"""
     image_description = state.get("image_analysis") or "A person presenting AI tools."
     user_prompt = state.get("user_prompt", "")
+    tone = state.get("tone") or "casual"
+    target_audience = state.get("target_audience") or "General Audience"
+    language = state.get("language") or "English"
     
     caption = CaptionService.generate_caption(
         image_description=image_description,
         user_prompt=user_prompt,
+        tone=tone,
+        target_audience=target_audience,
+        language=language,
     )
     return {
         "master_caption": caption,
@@ -48,10 +54,17 @@ def copywriter_agent_node(state: AgentState) -> Dict:
     if critic_feedback:
         caption = f"{caption}\n(Note: {critic_feedback})"
 
+    tone = state.get("tone") or "casual"
+    target_audience = state.get("target_audience") or "General Audience"
+    language = state.get("language") or "English"
+
     posts = PlatformService.generate_posts(
         caption=caption,
         hashtags=hashtags,
         platforms=platforms,
+        tone=tone,
+        target_audience=target_audience,
+        language=language,
     )
 
     # Self-correction check for Twitter character limit

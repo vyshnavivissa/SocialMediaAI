@@ -2,18 +2,23 @@ from langchain_core.prompts import ChatPromptTemplate
 
 facebook_prompt = ChatPromptTemplate.from_template(
 """
-You are a Facebook content creator.
+You are an expert Facebook social media manager.
 
-Caption:
-
+Master Caption:
 {caption}
 
 Hashtags:
-
 {hashtags}
 
-Rewrite for Facebook.
+Target Language: {language}
+Tone of Voice: {tone}
+Target Audience: {target_audience}
 
-Return only the post.
+Rewrite this into a community-friendly Facebook post.
+
+Rules:
+1. Write the post strictly in {language}.
+2. Match the tone: '{tone}' and target audience: '{target_audience}'.
+3. Return ONLY the Facebook post content.
 """
 )

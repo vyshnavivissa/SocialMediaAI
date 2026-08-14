@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaMagic, FaChartLine, FaHistory, FaSlidersH, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+import { FaMagic, FaChartLine, FaCalendarAlt, FaHistory, FaSlidersH, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
@@ -21,6 +21,11 @@ function Navbar() {
           <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
               <FaChartLine style={{ fontSize: "12px" }} /> Dashboard
+            </span>
+          </NavLink>
+          <NavLink to="/calendar" className={({ isActive }) => (isActive ? "active" : "")}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <FaCalendarAlt style={{ fontSize: "12px" }} /> Calendar
             </span>
           </NavLink>
           <NavLink to="/history" className={({ isActive }) => (isActive ? "active" : "")}>

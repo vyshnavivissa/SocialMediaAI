@@ -5,7 +5,7 @@ from agents import run_social_media_agent_workflow
 class SocialMediaService:
 
     @staticmethod
-    def generate(image, prompt, platforms, user=None):
+    def generate(image, prompt, platforms, user=None, tone="casual", target_audience="General Audience", language="English", is_draft=False):
 
         # Handle Image Asset (User Uploaded OR Auto AI Generated)
         image_path = None
@@ -23,6 +23,9 @@ class SocialMediaService:
             prompt=prompt,
             platforms=platforms,
             image_path=image_path,
+            tone=tone,
+            target_audience=target_audience,
+            language=language,
         )
 
         caption = agent_result.get("master_caption", "")
@@ -36,6 +39,10 @@ class SocialMediaService:
             master_caption=caption,
             hashtags=hashtags,
             generated_posts=platform_posts,
+            tone=tone or "casual",
+            target_audience=target_audience or "General Audience",
+            language=language or "English",
+            is_draft=is_draft,
         )
 
         final_image_url = generated_post.image.url if generated_post.image else image_path
@@ -46,4 +53,8 @@ class SocialMediaService:
             "master_caption": caption,
             "hashtags": hashtags,
             "generated_posts": platform_posts,
+            "tone": generated_post.tone,
+            "target_audience": generated_post.target_audience,
+            "language": generated_post.language,
+            "is_draft": generated_post.is_draft,
         }

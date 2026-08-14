@@ -11,7 +11,7 @@ from runnables.platform import (
 class PlatformService:
 
     @staticmethod
-    def generate_posts(caption, hashtags, platforms):
+    def generate_posts(caption, hashtags, platforms, tone="casual", target_audience="General Audience", language="English"):
 
         available = {
             "twitter": twitter_chain,
@@ -23,6 +23,7 @@ class PlatformService:
         selected = {
             platform: available[platform]
             for platform in platforms
+            if platform in available
         }
 
         chain = RunnableParallel(**selected)
@@ -33,5 +34,8 @@ class PlatformService:
             {
                 "caption": caption,
                 "hashtags": hashtag_string,
+                "tone": tone or "casual",
+                "target_audience": target_audience or "General Audience",
+                "language": language or "English",
             }
         )

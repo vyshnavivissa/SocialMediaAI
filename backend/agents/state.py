@@ -3,6 +3,9 @@ from typing import TypedDict, List, Dict, Optional
 class AgentState(TypedDict):
     image_path: Optional[str]
     user_prompt: str
+    tone: Optional[str]
+    target_audience: Optional[str]
+    language: Optional[str]
     platforms: List[str]
     image_analysis: Optional[str]
     master_caption: Optional[str]

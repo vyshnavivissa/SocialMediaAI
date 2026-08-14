@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 import {
     FaImage,
     FaTwitter,
@@ -11,12 +13,19 @@ import {
     FaShare,
     FaBookmark,
     FaEye,
-    FaRobot
+    FaRobot,
+    FaMagic,
+    FaSpinner,
+    FaBolt,
+    FaRocket,
+    FaGlobe,
+    FaCheck
 } from "react-icons/fa";
 
 function LivePreview({ image, generatedData, platforms }) {
     const [editablePosts, setEditablePosts] = useState({});
     const [activeTab, setActiveTab] = useState("all");
+    const [refiningState, setRefiningState] = useState({});
 
     useEffect(() => {
         if (generatedData?.generated_posts) {
@@ -29,6 +38,35 @@ function LivePreview({ image, generatedData, platforms }) {
             ...previousPosts,
             [platform]: value,
         }));
+    };
+
+    const handleRefineContent = async (platform, action, extraParams = {}) => {
+        const currentContent = editablePosts[platform];
+        if (!currentContent) {
+            toast.error("No content to refine.");
+            return;
+        }
+
+        try {
+            setRefiningState((prev) => ({ ...prev, [platform]: action }));
+            const response = await api.post("/refine/", {
+                platform,
+                content: currentContent,
+                action,
+                ...extraParams,
+            });
+
+            const newContent = response.data?.refined_content;
+            if (newContent) {
+                setEditablePosts((prev) => ({ ...prev, [platform]: newContent }));
+                toast.success(`Refined post for ${platform}!`);
+            }
+        } catch (error) {
+            console.error(error.response?.data || error.message);
+            toast.error("Failed to refine post content.");
+        } finally {
+            setRefiningState((prev) => ({ ...prev, [platform]: null }));
+        }
     };
 
     const getPlatformIcon = (platform) => {
@@ -113,6 +151,46 @@ function LivePreview({ image, generatedData, platforms }) {
                                     <span style={{ marginLeft: "auto", fontSize: "11px", color: "var(--primary-500)", fontWeight: "700" }}>
                                         EDITABLE
                                     </span>
+                                </div>
+
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.6rem" }}>
+                                    <span style={{ fontSize: "0.75rem", fontWeight: "700", color: "var(--text-muted)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                        <FaMagic style={{ color: "var(--accent-purple)" }} /> AI Refine:
+                                    </span>
+                                    {[
+                                        { id: "make_shorter", label: "Shorten", icon: <FaBolt /> },
+                                        { id: "more_engaging", label: "More Engaging", icon: <FaRocket /> },
+                                        { id: "add_cta", label: "Add CTA", icon: <FaCheck /> },
+                                        { id: "fix_grammar", label: "Fix Grammar", icon: "✍️" },
+                                    ].map((actionItem) => (
+                                        <button
+                                            key={actionItem.id}
+                                            type="button"
+                                            onClick={() => handleRefineContent(platform, actionItem.id)}
+                                            disabled={refiningState[platform]}
+                                            style={{
+                                                padding: "0.25rem 0.55rem",
+                                                borderRadius: "6px",
+                                                fontSize: "0.75rem",
+                                                fontWeight: "600",
+                                                background: "rgba(255, 255, 255, 0.05)",
+                                                border: "1px solid var(--border-subtle)",
+                                                color: "var(--text-secondary)",
+                                                cursor: "pointer",
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                gap: "4px",
+                                                transition: "all 0.2s",
+                                            }}
+                                        >
+                                            {refiningState[platform] === actionItem.id ? (
+                                                <FaSpinner className="fa-spin" style={{ fontSize: "10px" }} />
+                                            ) : (
+                                                actionItem.icon
+                                            )}
+                                            {actionItem.label}
+                                        </button>
+                                    ))}
                                 </div>
 
                                 <textarea

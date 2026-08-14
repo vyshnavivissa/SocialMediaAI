@@ -1,8 +1,27 @@
 import { useState } from "react";
 import api from "../api/axios";
 import toast from "react-hot-toast";
-import { FaCloudUploadAlt, FaMagic, FaPaperPlane, FaClock, FaTrash, FaSpinner } from "react-icons/fa";
+import { FaCloudUploadAlt, FaMagic, FaPaperPlane, FaClock, FaTrash, FaSpinner, FaBookmark, FaGlobe, FaBullhorn, FaUserTag } from "react-icons/fa";
 import PlatformSelector from "./PlatformSelector";
+
+const TONE_OPTIONS = [
+    { id: "casual", label: "Casual", icon: "😊" },
+    { id: "professional", label: "Professional", icon: "💼" },
+    { id: "witty", label: "Witty / Humorous", icon: "😄" },
+    { id: "promotional", label: "Promotional", icon: "📢" },
+    { id: "storytelling", label: "Storytelling", icon: "📖" },
+    { id: "urgent", label: "Urgent / FOMO", icon: "🔥" },
+];
+
+const LANGUAGE_OPTIONS = [
+    "English",
+    "Spanish",
+    "French",
+    "German",
+    "Hindi",
+    "Japanese",
+    "Portuguese",
+];
 
 function ComposePost({
     image,
@@ -15,10 +34,14 @@ function ComposePost({
     setGeneratedData,
 }) {
     const [loading, setLoading] = useState(false);
+    const [savingDraft, setSavingDraft] = useState(false);
     const [scheduledTime, setScheduledTime] = useState("");
+    const [tone, setTone] = useState("casual");
+    const [targetAudience, setTargetAudience] = useState("General Audience");
+    const [language, setLanguage] = useState("English");
 
     // Generate AI content
-    const generateContent = async () => {
+    const generateContent = async (isDraft = false) => {
         if (!prompt.trim()) {
             toast.error("Enter a content idea.");
             return;
@@ -31,6 +54,11 @@ function ComposePost({
 
         const formData = new FormData();
         formData.append("prompt", prompt);
+        formData.append("tone", tone);
+        formData.append("target_audience", targetAudience);
+        formData.append("language", language);
+        formData.append("is_draft", isDraft);
+
         platforms.forEach((platform) => {
             formData.append("platforms", platform);
         });
@@ -40,10 +68,12 @@ function ComposePost({
         }
 
         try {
-            setLoading(true);
+            if (isDraft) setSavingDraft(true);
+            else setLoading(true);
+
             const response = await api.post("/generate/", formData);
             setGeneratedData(response.data);
-            toast.success("AI content generated!");
+            toast.success(isDraft ? "Saved as draft post!" : "AI content generated!");
         } catch (error) {
             console.error(error.response?.data || error.message);
             toast.error(
@@ -51,6 +81,7 @@ function ComposePost({
             );
         } finally {
             setLoading(false);
+            setSavingDraft(false);
         }
     };
 
@@ -179,9 +210,92 @@ function ComposePost({
                     </div>
                 </div>
 
+                <div className="form-section" style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "10px", border: "1px solid var(--border-subtle)", marginBottom: "1.25rem" }}>
+                    <label className="section-label" style={{ marginBottom: "0.75rem" }}>
+                        <span className="step-num">3</span> AI Customization & Persona
+                    </label>
+
+                    <div style={{ marginBottom: "1rem" }}>
+                        <span style={{ fontSize: "0.85rem", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "0.5rem" }}>
+                            Tone of Voice
+                        </span>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                            {TONE_OPTIONS.map((t) => (
+                                <button
+                                    key={t.id}
+                                    type="button"
+                                    onClick={() => setTone(t.id)}
+                                    style={{
+                                        padding: "0.4rem 0.8rem",
+                                        borderRadius: "20px",
+                                        fontSize: "0.82rem",
+                                        fontWeight: "600",
+                                        border: tone === t.id ? "1px solid var(--accent-purple)" : "1px solid var(--border-subtle)",
+                                        background: tone === t.id ? "rgba(139, 92, 246, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                                        color: tone === t.id ? "#c084fc" : "var(--text-main)",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s ease",
+                                    }}
+                                >
+                                    {t.icon} {t.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                        <div>
+                            <label style={{ fontSize: "0.82rem", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "0.35rem" }}>
+                                <FaUserTag style={{ marginRight: "4px" }} /> Target Audience
+                            </label>
+                            <input
+                                type="text"
+                                value={targetAudience}
+                                onChange={(e) => setTargetAudience(e.target.value)}
+                                placeholder="e.g. Tech Founders, Gen Z, Marketers"
+                                style={{
+                                    width: "100%",
+                                    padding: "0.5rem 0.75rem",
+                                    borderRadius: "8px",
+                                    border: "1px solid var(--border-subtle)",
+                                    background: "rgba(0,0,0,0.2)",
+                                    color: "var(--text-main)",
+                                    fontSize: "0.85rem",
+                                }}
+                            />
+                        </div>
+
+                        <div>
+                            <label style={{ fontSize: "0.82rem", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "0.35rem" }}>
+                                <FaGlobe style={{ marginRight: "4px" }} /> Output Language
+                            </label>
+                            <select
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value)}
+                                style={{
+                                    width: "100%",
+                                    padding: "0.5rem 0.75rem",
+                                    borderRadius: "8px",
+                                    border: "1px solid var(--border-subtle)",
+                                    background: "#181824",
+                                    color: "#ffffff",
+                                    fontSize: "0.85rem",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                {LANGUAGE_OPTIONS.map((lang) => (
+                                    <option key={lang} value={lang} style={{ background: "#181824", color: "#ffffff" }}>
+                                        {lang}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="form-section">
                     <label className="section-label">
-                        <span className="step-num">3</span> Media Asset (Optional)
+                        <span className="step-num">4</span> Media Asset (Optional)
                     </label>
 
                     {image ? (
@@ -218,22 +332,45 @@ function ComposePost({
                     )}
                 </div>
 
-                <button
-                    type="button"
-                    className="generate-button"
-                    onClick={generateContent}
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <>
-                            <FaSpinner className="fa-spin" style={{ animation: "spin 1s linear infinite" }} /> Generating AI Magic...
-                        </>
-                    ) : (
-                        <>
-                            <FaMagic /> Generate AI Content
-                        </>
-                    )}
-                </button>
+                <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "0.75rem" }}>
+                    <button
+                        type="button"
+                        className="generate-button"
+                        onClick={() => generateContent(false)}
+                        disabled={loading || savingDraft}
+                    >
+                        {loading ? (
+                            <>
+                                <FaSpinner className="fa-spin" style={{ animation: "spin 1s linear infinite" }} /> Generating AI Magic...
+                            </>
+                        ) : (
+                            <>
+                                <FaMagic /> Generate AI Content
+                            </>
+                        )}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => generateContent(true)}
+                        disabled={loading || savingDraft}
+                        style={{
+                            background: "rgba(255, 255, 255, 0.08)",
+                            color: "var(--text-main)",
+                            border: "1px solid var(--border-subtle)",
+                            borderRadius: "10px",
+                            fontWeight: "600",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "8px",
+                            padding: "0.75rem 1rem",
+                        }}
+                    >
+                        {savingDraft ? <FaSpinner className="fa-spin" /> : <FaBookmark />} Save Draft
+                    </button>
+                </div>
 
                 <div className="action-divider">
                     <span>Dispatch Actions</span>

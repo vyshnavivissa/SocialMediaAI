@@ -28,6 +28,10 @@ class GenerateAPIView(APIView):
                 prompt=serializer.validated_data["prompt"],
                 platforms=serializer.validated_data["platforms"],
                 user=request.user,
+                tone=serializer.validated_data.get("tone", "casual"),
+                target_audience=serializer.validated_data.get("target_audience", "General Audience"),
+                language=serializer.validated_data.get("language", "English"),
+                is_draft=serializer.validated_data.get("is_draft", False),
             )
 
             response_serializer = GenerateResponseSerializer(data=result)

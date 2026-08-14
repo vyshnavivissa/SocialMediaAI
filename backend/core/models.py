@@ -26,6 +26,28 @@ class GeneratedPost(models.Model):
 
     generated_posts = models.JSONField()
 
+    tone = models.CharField(
+        max_length=50,
+        blank=True,
+        default="casual",
+    )
+
+    target_audience = models.CharField(
+        max_length=255,
+        blank=True,
+        default="General Audience",
+    )
+
+    language = models.CharField(
+        max_length=50,
+        blank=True,
+        default="English",
+    )
+
+    is_draft = models.BooleanField(
+        default=False,
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )

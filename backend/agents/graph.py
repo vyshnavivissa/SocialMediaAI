@@ -56,10 +56,16 @@ def run_social_media_agent_workflow(
     prompt: str,
     platforms: List[str],
     image_path: Optional[str] = None,
+    tone: Optional[str] = "casual",
+    target_audience: Optional[str] = "General Audience",
+    language: Optional[str] = "English",
 ) -> Dict:
     initial_state: AgentState = {
         "image_path": image_path,
         "user_prompt": prompt,
+        "tone": tone,
+        "target_audience": target_audience,
+        "language": language,
         "platforms": platforms,
         "image_analysis": None,
         "master_caption": None,

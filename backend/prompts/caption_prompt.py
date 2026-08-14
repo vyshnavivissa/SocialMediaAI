@@ -10,12 +10,17 @@ Image Description:
 User Prompt:
 {user_prompt}
 
-Generate an engaging social media caption.
+Tone: {tone}
+Target Audience: {target_audience}
+Language: {language}
+
+Generate an engaging social media caption adhering strictly to the specified Tone, Target Audience, and Language.
 
 Rules:
 1. Maximum 100 words.
-2. Professional and engaging.
-3. Do not generate hashtags.
-4. Return only the caption.
+2. Match the specified tone ({tone}) and target audience ({target_audience}).
+3. Write the response in {language}.
+4. Do not generate hashtags.
+5. Return only the caption text.
 """
 )

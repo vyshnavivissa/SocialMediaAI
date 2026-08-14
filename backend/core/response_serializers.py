@@ -24,6 +24,10 @@ class GenerateResponseSerializer(serializers.Serializer):
     )
 
     generated_posts = PlatformPostsSerializer()
+    tone = serializers.CharField(required=False)
+    target_audience = serializers.CharField(required=False)
+    language = serializers.CharField(required=False)
+    is_draft = serializers.BooleanField(required=False)
 class PublishStatusSerializer(serializers.Serializer):
 
     status = serializers.CharField()
