@@ -81,8 +81,8 @@ class OAuthCallbackAPIView(APIView):
                 SocialAccount.objects.update_or_create(
                     user=user_obj,
                     platform=platform,
-                    account_id=account_id,
                     defaults={
+                        "account_id": account_id,
                         "account_name": account_name,
                         "access_token": access_token,
                         "refresh_token": refresh_token,
@@ -95,8 +95,8 @@ class OAuthCallbackAPIView(APIView):
                 SocialAccount.objects.update_or_create(
                     user=user_obj,
                     platform=platform,
-                    account_id="temp_id",
                     defaults={
+                        "account_id": "temp_id",
                         "account_name": f"{platform.capitalize()} Connected Account",
                         "access_token": access_token,
                         "refresh_token": refresh_token,

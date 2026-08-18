@@ -3,13 +3,13 @@ import {
 } from "react";
 
 import Navbar
-from "../components/Navbar";
+    from "../components/Navbar";
 
 import ComposePost
-from "../components/ComposePost";
+    from "../components/ComposePost";
 
 import LivePreview
-from "../components/LivePreview";
+    from "../components/LivePreview";
 
 
 function Dashboard() {

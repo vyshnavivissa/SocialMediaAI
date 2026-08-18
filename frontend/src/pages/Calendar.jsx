@@ -291,8 +291,8 @@ function Calendar() {
                                                             background: post.status === "published"
                                                                 ? "rgba(34, 197, 94, 0.15)"
                                                                 : post.status === "failed"
-                                                                ? "rgba(239, 68, 68, 0.15)"
-                                                                : "rgba(59, 130, 246, 0.15)",
+                                                                    ? "rgba(239, 68, 68, 0.15)"
+                                                                    : "rgba(59, 130, 246, 0.15)",
                                                             border: "1px solid rgba(255,255,255,0.1)",
                                                             borderRadius: "6px",
                                                             padding: "4px 6px",

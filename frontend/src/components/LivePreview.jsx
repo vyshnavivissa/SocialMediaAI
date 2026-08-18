@@ -137,105 +137,107 @@ function LivePreview({ image, generatedData, platforms }) {
                             )}
                         </div>
 
-                        {/* Social Network Post Mockups */}
-                        {displayedPlatforms.map((platform) => (
-                            <div key={platform} className="mockup-card">
-                                <div className="mockup-header">
-                                    <div className="mockup-avatar">S</div>
-                                    <div className="mockup-user-info">
-                                        <div className="mockup-name">
-                                            SocialAI Brand {getPlatformIcon(platform)}
+                        {/* Social Network Post Mockups (Horizontal Layout) */}
+                        <div className="mockups-horizontal-container">
+                            {displayedPlatforms.map((platform) => (
+                                <div key={platform} className="mockup-card">
+                                    <div className="mockup-header">
+                                        <div className="mockup-avatar">S</div>
+                                        <div className="mockup-user-info">
+                                            <div className="mockup-name">
+                                                SocialAI Brand {getPlatformIcon(platform)}
+                                            </div>
+                                            <div className="mockup-handle">@socialai_official • Just now</div>
                                         </div>
-                                        <div className="mockup-handle">@socialai_official • Just now</div>
+                                        <span style={{ marginLeft: "auto", fontSize: "11px", color: "var(--primary-500)", fontWeight: "700" }}>
+                                            EDITABLE
+                                        </span>
                                     </div>
-                                    <span style={{ marginLeft: "auto", fontSize: "11px", color: "var(--primary-500)", fontWeight: "700" }}>
-                                        EDITABLE
-                                    </span>
+
+                                    <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.6rem" }}>
+                                        <span style={{ fontSize: "0.75rem", fontWeight: "700", color: "var(--text-muted)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                            <FaMagic style={{ color: "var(--accent-purple)" }} /> AI Refine:
+                                        </span>
+                                        {[
+                                            { id: "make_shorter", label: "Shorten", icon: <FaBolt /> },
+                                            { id: "more_engaging", label: "More Engaging", icon: <FaRocket /> },
+                                            { id: "add_cta", label: "Add CTA", icon: <FaCheck /> },
+                                            { id: "fix_grammar", label: "Fix Grammar", icon: "✍️" },
+                                        ].map((actionItem) => (
+                                            <button
+                                                key={actionItem.id}
+                                                type="button"
+                                                onClick={() => handleRefineContent(platform, actionItem.id)}
+                                                disabled={refiningState[platform]}
+                                                style={{
+                                                    padding: "0.25rem 0.55rem",
+                                                    borderRadius: "6px",
+                                                    fontSize: "0.75rem",
+                                                    fontWeight: "600",
+                                                    background: "rgba(255, 255, 255, 0.05)",
+                                                    border: "1px solid var(--border-subtle)",
+                                                    color: "var(--text-secondary)",
+                                                    cursor: "pointer",
+                                                    display: "inline-flex",
+                                                    alignItems: "center",
+                                                    gap: "4px",
+                                                    transition: "all 0.2s",
+                                                }}
+                                            >
+                                                {refiningState[platform] === actionItem.id ? (
+                                                    <FaSpinner className="fa-spin" style={{ fontSize: "10px" }} />
+                                                ) : (
+                                                    actionItem.icon
+                                                )}
+                                                {actionItem.label}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <textarea
+                                        value={editablePosts[platform] || ""}
+                                        onChange={(e) => handleContentChange(platform, e.target.value)}
+                                        placeholder={`Customized content for ${platform}...`}
+                                        rows={4}
+                                        style={{
+                                            width: "100%",
+                                            background: "transparent",
+                                            border: "1px dashed var(--border-subtle)",
+                                            borderRadius: "8px",
+                                            padding: "10px",
+                                            color: "var(--text-primary)",
+                                            marginBottom: "12px",
+                                            resize: "vertical"
+                                        }}
+                                    />
+
+                                    {/* Media Preview Area inside mockup */}
+                                    {image ? (
+                                        <div className="mockup-media">
+                                            <img src={URL.createObjectURL(image)} alt="Post attachment preview" />
+                                        </div>
+                                    ) : generatedData?.image_path ? (
+                                        <div className="mockup-media">
+                                            <img src={generatedData.image_path.startsWith("http") ? generatedData.image_path : `${import.meta.env.VITE_API_URL}${generatedData.image_path}`} alt="AI Generated media preview" />
+                                        </div>
+                                    ) : (
+                                        <div className="mockup-media-placeholder">
+                                            <FaImage />
+                                            <span>No image attached</span>
+                                        </div>
+                                    )}
+
+                                    {/* Social engagement actions footer mockup */}
+                                    <div className="mockup-actions">
+                                        <div className="action-item"><FaHeart /> <span>124</span></div>
+                                        <div className="action-item"><FaComment /> <span>18</span></div>
+                                        <div className="action-item"><FaRetweet /> <span>32</span></div>
+                                        <div className="action-item"><FaShare /></div>
+                                        <div className="action-item" style={{ marginLeft: "auto" }}><FaBookmark /></div>
+                                    </div>
                                 </div>
-
-                                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.6rem" }}>
-                                    <span style={{ fontSize: "0.75rem", fontWeight: "700", color: "var(--text-muted)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                                        <FaMagic style={{ color: "var(--accent-purple)" }} /> AI Refine:
-                                    </span>
-                                    {[
-                                        { id: "make_shorter", label: "Shorten", icon: <FaBolt /> },
-                                        { id: "more_engaging", label: "More Engaging", icon: <FaRocket /> },
-                                        { id: "add_cta", label: "Add CTA", icon: <FaCheck /> },
-                                        { id: "fix_grammar", label: "Fix Grammar", icon: "✍️" },
-                                    ].map((actionItem) => (
-                                        <button
-                                            key={actionItem.id}
-                                            type="button"
-                                            onClick={() => handleRefineContent(platform, actionItem.id)}
-                                            disabled={refiningState[platform]}
-                                            style={{
-                                                padding: "0.25rem 0.55rem",
-                                                borderRadius: "6px",
-                                                fontSize: "0.75rem",
-                                                fontWeight: "600",
-                                                background: "rgba(255, 255, 255, 0.05)",
-                                                border: "1px solid var(--border-subtle)",
-                                                color: "var(--text-secondary)",
-                                                cursor: "pointer",
-                                                display: "inline-flex",
-                                                alignItems: "center",
-                                                gap: "4px",
-                                                transition: "all 0.2s",
-                                            }}
-                                        >
-                                            {refiningState[platform] === actionItem.id ? (
-                                                <FaSpinner className="fa-spin" style={{ fontSize: "10px" }} />
-                                            ) : (
-                                                actionItem.icon
-                                            )}
-                                            {actionItem.label}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                <textarea
-                                    value={editablePosts[platform] || ""}
-                                    onChange={(e) => handleContentChange(platform, e.target.value)}
-                                    placeholder={`Customized content for ${platform}...`}
-                                    rows={4}
-                                    style={{
-                                        width: "100%",
-                                        background: "transparent",
-                                        border: "1px dashed var(--border-subtle)",
-                                        borderRadius: "8px",
-                                        padding: "10px",
-                                        color: "var(--text-primary)",
-                                        marginBottom: "12px",
-                                        resize: "vertical"
-                                    }}
-                                />
-
-                                {/* Media Preview Area inside mockup */}
-                                {image ? (
-                                    <div className="mockup-media">
-                                        <img src={URL.createObjectURL(image)} alt="Post attachment preview" />
-                                    </div>
-                                ) : generatedData?.image_path ? (
-                                    <div className="mockup-media">
-                                        <img src={generatedData.image_path.startsWith("http") ? generatedData.image_path : `${import.meta.env.VITE_API_URL}${generatedData.image_path}`} alt="AI Generated media preview" />
-                                    </div>
-                                ) : (
-                                    <div className="mockup-media-placeholder">
-                                        <FaImage />
-                                        <span>No image attached</span>
-                                    </div>
-                                )}
-
-                                {/* Social engagement actions footer mockup */}
-                                <div className="mockup-actions">
-                                    <div className="action-item"><FaHeart /> <span>124</span></div>
-                                    <div className="action-item"><FaComment /> <span>18</span></div>
-                                    <div className="action-item"><FaRetweet /> <span>32</span></div>
-                                    <div className="action-item"><FaShare /></div>
-                                    <div className="action-item" style={{ marginLeft: "auto" }}><FaBookmark /></div>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </>
                 )}
 

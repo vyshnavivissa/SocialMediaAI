@@ -4,18 +4,27 @@ from langchain_core.tools import tool
 
 
 @tool
-def twitter_tool(post: str) -> dict:
+def twitter_tool(post: str, user=None) -> dict:
     """
-    Publish a post to Twitter.
+    Publish a post to Twitter for the authenticated user.
     """
     try:
         from core.models import SocialAccount
         from oauth.oauth_service import OAuthService
 
-        account = SocialAccount.objects.filter(
-            platform="twitter",
-            connected=True
-        ).first()
+        account = None
+        if user and user.is_authenticated:
+            account = SocialAccount.objects.filter(
+                user=user,
+                platform="twitter",
+                connected=True
+            ).first()
+
+        if not account:
+            account = SocialAccount.objects.filter(
+                platform="twitter",
+                connected=True
+            ).first()
 
         if account and account.access_token:
             try:

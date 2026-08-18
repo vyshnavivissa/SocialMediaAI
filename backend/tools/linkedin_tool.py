@@ -4,18 +4,28 @@ from langchain_core.tools import tool
 
 
 @tool
-def linkedin_tool(post: str, image_path: str = None) -> dict:
+def linkedin_tool(post: str, image_path: str = None, user=None) -> dict:
     """
-    Publish a post to LinkedIn.
+    Publish a post to LinkedIn for the authenticated user.
     """
     try:
         from core.models import SocialAccount
         from oauth.oauth_service import OAuthService
 
-        account = SocialAccount.objects.filter(
-            platform="linkedin",
-            connected=True
-        ).first()
+        account = None
+        if user and user.is_authenticated:
+            account = SocialAccount.objects.filter(
+                user=user,
+                platform="linkedin",
+                connected=True
+            ).first()
+
+        # Fallback if user is not passed or for local single-tenant testing
+        if not account:
+            account = SocialAccount.objects.filter(
+                platform="linkedin",
+                connected=True
+            ).first()
 
         if account and account.access_token:
             result = OAuthService.publish(
@@ -28,6 +38,12 @@ def linkedin_tool(post: str, image_path: str = None) -> dict:
                 "status": "success",
                 "platform": "linkedin",
                 "details": result,
+            }
+        else:
+            return {
+                "status": "failed",
+                "reason": "No connected LinkedIn account found for this user. Please connect LinkedIn in Settings.",
+                "platform": "linkedin",
             }
     except Exception as e:
         return {

@@ -37,7 +37,7 @@ class PublishService:
             tool = cls.TOOLS.get(platform)
 
             if tool:
-                args = {"post": post}
+                args = {"post": post, "user": user}
                 if platform == "linkedin" and image_path:
                     args["image_path"] = image_path
 
