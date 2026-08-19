@@ -25,7 +25,7 @@ function PlatformSelector({ platforms, setPlatforms }) {
     return (
         <div>
             <label className="section-label">
-                <span className="step-num">1</span> Target Platforms
+                Target Platforms
             </label>
 
             <div className="platform-grid">

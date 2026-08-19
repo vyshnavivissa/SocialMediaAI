@@ -91,7 +91,7 @@ function LivePreview({ image, generatedData, platforms }) {
     return (
         <section>
             <h1 className="page-heading">
-                Live Preview <span className="page-heading-badge">Step 2 of 2</span>
+                Live Preview
             </h1>
 
             <div className="preview-card">

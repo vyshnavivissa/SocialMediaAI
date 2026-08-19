@@ -186,7 +186,7 @@ function ComposePost({
     return (
         <section>
             <h1 className="page-heading">
-                Compose Post <span className="page-heading-badge">Step 1 of 2</span>
+                Compose Post
             </h1>
 
             <div className="compose-card">
@@ -197,7 +197,7 @@ function ComposePost({
 
                 <div className="form-section">
                     <label className="section-label">
-                        <span className="step-num">2</span> Content Idea & Prompt
+                        Content Idea & Prompt
                     </label>
                     <textarea
                         value={prompt}
@@ -212,7 +212,7 @@ function ComposePost({
 
                 <div className="form-section" style={{ background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "10px", border: "1px solid var(--border-subtle)", marginBottom: "1.25rem" }}>
                     <label className="section-label" style={{ marginBottom: "0.75rem" }}>
-                        <span className="step-num">3</span> AI Customization & Persona
+                        AI Customization & Persona
                     </label>
 
                     <div style={{ marginBottom: "1rem" }}>
@@ -295,7 +295,7 @@ function ComposePost({
 
                 <div className="form-section">
                     <label className="section-label">
-                        <span className="step-num">4</span> Media Asset (Optional)
+                        Media Asset (Optional)
                     </label>
 
                     {image ? (
