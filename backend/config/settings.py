@@ -402,3 +402,12 @@ CELERY_TIMEZONE = (
 
 
 CELERY_ENABLE_UTC = True
+
+
+# ==========================================
+# PRODUCTION SECURITY HEADERS & HARDENING
+# ==========================================
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+REFERRER_POLICY = "same-origin"

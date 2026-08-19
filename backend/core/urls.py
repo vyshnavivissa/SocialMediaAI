@@ -5,6 +5,7 @@ from .publish_views import PublishAPIView
 from .history_views import HistoryAPIView
 from .auth_views import RegisterView, UserProfileView
 from .refine_views import RefineAPIView
+from .analytics_views import AnalyticsAPIView
 
 urlpatterns = [
     # Auth endpoints
@@ -18,4 +19,5 @@ urlpatterns = [
     path("publish/", PublishAPIView.as_view()),
     path("refine/", RefineAPIView.as_view(), name="refine"),
     path("history/", HistoryAPIView.as_view(), name="history"),
+    path("analytics/", AnalyticsAPIView.as_view(), name="analytics"),
 ]

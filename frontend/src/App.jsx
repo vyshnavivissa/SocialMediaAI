@@ -6,6 +6,7 @@ import {
 
 import Dashboard from "./pages/Dashboard";
 import Calendar from "./pages/Calendar";
+import Analytics from "./pages/Analytics";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
@@ -26,6 +27,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/analytics"
+                        element={
+                            <ProtectedRoute>
+                                <Analytics />
                             </ProtectedRoute>
                         }
                     />

@@ -20,7 +20,10 @@ function Navbar() {
 
         <nav className="sidebar-nav">
           <NavLink to="/" className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}>
-            <FaChartLine /> <span>Dashboard</span>
+            <FaMagic /> <span>Dashboard</span>
+          </NavLink>
+          <NavLink to="/analytics" className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}>
+            <FaChartLine /> <span>Analytics</span>
           </NavLink>
           <NavLink to="/calendar" className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}>
             <FaCalendarAlt /> <span>Calendar</span>

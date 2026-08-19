@@ -1,8 +1,30 @@
+import re
 from typing import Dict, List, Optional
 from services.caption_service import CaptionService
 from services.hashtag_service import HashtagService
 from services.platform_service import PlatformService
 from .state import AgentState
+
+def sanitize_user_prompt(prompt: str) -> str:
+    """Sanitize user input against adversarial prompt injection attempts."""
+    if not prompt:
+        return ""
+    
+    injection_patterns = [
+        r"(?i)ignore\s+(previous|all)\s+instructions?",
+        r"(?i)system\s+prompt",
+        r"(?i)print\s+(env|environment|keys|secrets)",
+        r"(?i)api\s*key",
+        r"(?i)override\s+rules?",
+        r"(?i)you\s+are\s+now\s+a\s+DAN",
+    ]
+    
+    clean_prompt = prompt
+    for pattern in injection_patterns:
+        clean_prompt = re.sub(pattern, "[filtered]", clean_prompt)
+        
+    return clean_prompt[:500]
+
 
 def vision_agent_node(state: AgentState) -> Dict:
     """Vision & Image Context Analysis Agent"""
@@ -17,7 +39,8 @@ def vision_agent_node(state: AgentState) -> Dict:
 def strategy_caption_agent_node(state: AgentState) -> Dict:
     """Strategy & Master Caption Agent"""
     image_description = state.get("image_analysis") or "A person presenting AI tools."
-    user_prompt = state.get("user_prompt", "")
+    raw_prompt = state.get("user_prompt", "")
+    user_prompt = sanitize_user_prompt(raw_prompt)
     tone = state.get("tone") or "casual"
     target_audience = state.get("target_audience") or "General Audience"
     language = state.get("language") or "English"

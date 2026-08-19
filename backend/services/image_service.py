@@ -39,7 +39,7 @@ class ImageService:
                     f"STRICT DIRECTIVE: Absolutely no human face, no person, no woman, no man, no android head, no biological body."
                 )
 
-            # Check if OpenRouter key is configured
+            # Tier 1: Check OpenRouter key if configured
             openrouter_key = os.getenv("OPENROUTER_API_KEY")
             if openrouter_key:
                 try:
@@ -78,7 +78,22 @@ class ImageService:
                 except Exception as er:
                     print(f"OpenRouter google/imagen-3 failed: {er}")
 
-            # Direct Pollinations generator with strict seed & prompt
+            # Tier 2: Check Hugging Face Free API key if configured (FLUX.1-schnell)
+            hf_key = os.getenv("HUGGINGFACE_API_KEY")
+            if hf_key:
+                try:
+                    hf_url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+                    headers = {"Authorization": f"Bearer {hf_key}"}
+                    hf_resp = requests.post(hf_url, headers=headers, json={"inputs": strict_prompt}, timeout=30)
+                    if hf_resp.status_code == 200 and hf_resp.content:
+                        filename = f"flux_hf_{uuid.uuid4().hex[:8]}.jpg"
+                        content_file = ContentFile(hf_resp.content, name=filename)
+                        saved_path = default_storage.save(f"generated_posts/{filename}", content_file)
+                        return saved_path, content_file
+                except Exception as hf_err:
+                    print(f"Hugging Face FLUX.1 generation failed: {hf_err}")
+
+            # Tier 3: Pollinations FLUX.1 / SDXL (100% Free, Unlimited, No Key Required)
             encoded_prompt = urllib.parse.quote(strict_prompt)
             image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=1024&nologo=true&seed={uuid.uuid4().int % 100000}"
             
