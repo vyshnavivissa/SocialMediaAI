@@ -60,10 +60,10 @@ function Analytics() {
   const recentDispatches = data?.recent_dispatches || [];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg-app)" }}>
+    <div className="app-layout">
       <Navbar />
 
-      <main style={{ maxWidth: "1350px", margin: "32px auto", padding: "0 24px" }}>
+      <main className="main-content">
         {/* Page Header Banner */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px" }}>
           <div>
