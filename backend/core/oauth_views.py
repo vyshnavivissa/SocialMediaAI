@@ -12,7 +12,13 @@ class OAuthLoginAPIView(APIView):
 
         try:
             state = str(request.user.id) if request.user and request.user.is_authenticated else None
-            login_url = OAuthService.get_login_url(platform, state=state)
+            
+            # Allow instant local dev connection without external OAuth redirect block
+            is_mock = request.query_params.get("mock") == "true" or request.GET.get("mock") == "true"
+            if is_mock:
+                login_url = f"http://localhost:8000/oauth/{platform}/callback/?code=mock_dev_code&state={state or ''}"
+            else:
+                login_url = OAuthService.get_login_url(platform, state=state)
 
             return Response(
                 {
@@ -103,6 +109,27 @@ class OAuthCallbackAPIView(APIView):
                         "connected": True,
                     }
                 )
+
+        # Check if this is an AJAX/XHR/CORS request vs a top-level browser window navigation
+        sec_fetch_mode = request.headers.get("Sec-Fetch-Mode", "")
+        accept_header = request.headers.get("Accept", "")
+        is_xhr_cors = (
+            sec_fetch_mode == "cors"
+            or "application/json" in accept_header
+            or request.headers.get("X-Requested-With") == "XMLHttpRequest"
+            or request.path.startswith("/api/")
+            or (code and code.startswith("mock_"))
+        )
+
+        if is_xhr_cors:
+            return Response(
+                {
+                    "message": f"{platform.capitalize()} connected successfully.",
+                    "platform": platform,
+                    "connected": True,
+                },
+                status=status.HTTP_200_OK,
+            )
 
         from django.shortcuts import redirect
         return redirect("http://localhost:5173/settings")

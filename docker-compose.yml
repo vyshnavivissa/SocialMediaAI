@@ -1,0 +1,46 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: socialmedia_web
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - backend/.env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    volumes:
+      - media_data:/app/backend/uploads
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: socialmedia_celery
+    restart: always
+    command: celery -A config worker --loglevel=info
+    env_file:
+      - backend/.env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - web
+    volumes:
+      - media_data:/app/backend/uploads
+
+  redis:
+    image: redis:7-alpine
+    container_name: socialmedia_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  media_data:
