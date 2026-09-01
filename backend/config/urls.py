@@ -25,7 +25,7 @@ from django.http import HttpResponse
 
 from django.shortcuts import redirect
 
-def index_view(request):
+def index_view(request, *args, **kwargs):
     candidate_paths = [
         os.path.join(settings.BASE_DIR, "frontend_dist", "index.html"),
         os.path.join(settings.BASE_DIR, "staticfiles", "index.html"),
