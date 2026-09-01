@@ -23,6 +23,8 @@ from django.urls import include
 import os
 from django.http import HttpResponse
 
+from django.shortcuts import redirect
+
 def index_view(request):
     index_path = os.path.join(settings.BASE_DIR, "staticfiles", "frontend", "index.html")
     if os.path.exists(index_path):
@@ -30,8 +32,12 @@ def index_view(request):
             return HttpResponse(f.read(), content_type="text/html")
     return HttpResponse("SocialMediaAI API is active. Visit /api/ for REST endpoints.", content_type="text/plain")
 
+def assets_fallback_view(request, path):
+    return redirect(f"/static/frontend/assets/{path}")
+
 urlpatterns = [
     path("", index_view, name="index"),
+    path("assets/<path:path>", assets_fallback_view, name="assets_fallback"),
     path("admin/", admin.site.urls),
     path("api/", include("core.urls")),
     path("api/oauth/", include("core.oauth_urls")),
