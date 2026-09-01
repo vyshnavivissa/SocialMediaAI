@@ -40,8 +40,11 @@ def index_view(request):
 def assets_fallback_view(request, path):
     return redirect(f"/static/assets/{path}")
 
+from django.views.static import serve
+
 urlpatterns = [
     path("", index_view, name="index"),
+    path("static/<path:path>", serve, {"document_root": settings.STATIC_ROOT}),
     path("assets/<path:path>", assets_fallback_view, name="assets_fallback"),
     path("admin/", admin.site.urls),
     path("api/", include("core.urls")),
@@ -50,7 +53,7 @@ urlpatterns = [
     path("oauth/", include("core.oauth_urls")),
     path("schedule/", include("core.schedule_urls")),
     path("mock/", include("mock_api.urls")),
-    re_path(r"^.*$", index_view, name="spa-catchall"),
+    re_path(r"^(?!(static|media|assets|api|admin)/).*$", index_view, name="spa-catchall"),
 ]
 
 if settings.DEBUG:
