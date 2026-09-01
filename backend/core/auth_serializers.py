@@ -3,14 +3,15 @@ from rest_framework import serializers
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
-    password_confirm = serializers.CharField(write_only=True, min_length=6)
+    password_confirm = serializers.CharField(write_only=True, min_length=6, required=False)
 
     class Meta:
         model = User
         fields = ("id", "username", "email", "first_name", "last_name", "password", "password_confirm")
 
     def validate(self, attrs):
-        if attrs["password"] != attrs["password_confirm"]:
+        confirm = attrs.get("password_confirm") or self.initial_data.get("confirm_password") or self.initial_data.get("password_confirm")
+        if confirm and attrs["password"] != confirm:
             raise serializers.ValidationError({"password": "Password fields do not match."})
         if User.objects.filter(username=attrs["username"]).exists():
             raise serializers.ValidationError({"username": "A user with that username already exists."})
@@ -19,7 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop("password_confirm")
+        validated_data.pop("password_confirm", None)
         user = User.objects.create_user(
             username=validated_data["username"],
             email=validated_data.get("email", ""),
