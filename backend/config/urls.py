@@ -40,10 +40,14 @@ def index_view(request):
 def assets_fallback_view(request, path):
     return redirect(f"/static/assets/{path}")
 
+def static_frontend_fallback_view(request, path):
+    return redirect(f"/static/assets/{path}")
+
 from django.views.static import serve
 
 urlpatterns = [
     path("", index_view, name="index"),
+    path("static/frontend/assets/<path:path>", static_frontend_fallback_view, name="static_frontend_fallback"),
     path("static/<path:path>", serve, {"document_root": settings.STATIC_ROOT}),
     path("assets/<path:path>", assets_fallback_view, name="assets_fallback"),
     path("admin/", admin.site.urls),
