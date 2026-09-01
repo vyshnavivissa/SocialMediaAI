@@ -54,10 +54,11 @@ urlpatterns = [
     path("api/", include("core.urls")),
     path("api/oauth/", include("core.oauth_urls")),
     path("api/schedule/", include("core.schedule_urls")),
+    path("auth/", include("core.urls")),
     path("oauth/", include("core.oauth_urls")),
     path("schedule/", include("core.schedule_urls")),
     path("mock/", include("mock_api.urls")),
-    re_path(r"^(?!(static|media|assets|api|admin)/).*$", index_view, name="spa-catchall"),
+    re_path(r"^(?!(static|media|assets|api|admin|auth|oauth|schedule)/).*$", index_view, name="spa-catchall"),
 ]
 
 if settings.DEBUG:
