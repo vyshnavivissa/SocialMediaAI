@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -50,6 +50,7 @@ urlpatterns = [
     path("oauth/", include("core.oauth_urls")),
     path("schedule/", include("core.schedule_urls")),
     path("mock/", include("mock_api.urls")),
+    re_path(r"^.*$", index_view, name="spa-catchall"),
 ]
 
 if settings.DEBUG:
