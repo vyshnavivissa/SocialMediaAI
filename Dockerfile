@@ -37,8 +37,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend source code
 COPY backend/ ./
 
-# Copy built React frontend static assets into Django static directory
-COPY --from=frontend-builder /app/frontend/dist ./staticfiles/frontend
+# Copy built React frontend static assets into frontend_dist directory
+COPY --from=frontend-builder /app/frontend/dist ./frontend_dist
 
 # Expose production port
 EXPOSE 8000

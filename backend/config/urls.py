@@ -26,14 +26,19 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 
 def index_view(request):
-    index_path = os.path.join(settings.BASE_DIR, "staticfiles", "frontend", "index.html")
-    if os.path.exists(index_path):
-        with open(index_path, "r", encoding="utf-8") as f:
-            return HttpResponse(f.read(), content_type="text/html")
+    candidate_paths = [
+        os.path.join(settings.BASE_DIR, "frontend_dist", "index.html"),
+        os.path.join(settings.BASE_DIR, "staticfiles", "index.html"),
+        os.path.join(settings.BASE_DIR, "staticfiles", "frontend", "index.html"),
+    ]
+    for index_path in candidate_paths:
+        if os.path.exists(index_path):
+            with open(index_path, "r", encoding="utf-8") as f:
+                return HttpResponse(f.read(), content_type="text/html")
     return HttpResponse("SocialMediaAI API is active. Visit /api/ for REST endpoints.", content_type="text/plain")
 
 def assets_fallback_view(request, path):
-    return redirect(f"/static/frontend/assets/{path}")
+    return redirect(f"/static/assets/{path}")
 
 urlpatterns = [
     path("", index_view, name="index"),
