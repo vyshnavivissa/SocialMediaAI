@@ -104,6 +104,22 @@ class PublishedPost(models.Model):
         auto_now_add=True
     )
 
+    likes = models.IntegerField(
+        default=0
+    )
+
+    shares = models.IntegerField(
+        default=0
+    )
+
+    comments = models.IntegerField(
+        default=0
+    )
+
+    impressions = models.IntegerField(
+        default=0
+    )
+
     def __str__(self):
         return f"{self.platform} - {self.status}"
 

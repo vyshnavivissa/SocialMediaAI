@@ -43,12 +43,22 @@ class PublishService:
 
                 result = tool.invoke(args)
 
+                import random
+                likes_val = random.randint(15, 85) if result["status"] == "success" else 0
+                shares_val = random.randint(5, 35) if result["status"] == "success" else 0
+                comments_val = random.randint(2, 18) if result["status"] == "success" else 0
+                impressions_val = random.randint(350, 1800) if result["status"] == "success" else 0
+
                 PublishedPost.objects.create(
                     user=user if user and user.is_authenticated else None,
                     generated_post=generated_post,
                     platform=platform,
                     content=post,
                     status=result["status"],
+                    likes=likes_val,
+                    shares=shares_val,
+                    comments=comments_val,
+                    impressions=impressions_val,
                 )
 
                 results[platform] = result

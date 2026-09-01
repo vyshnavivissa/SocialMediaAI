@@ -20,7 +20,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include
+import os
+from django.http import HttpResponse
+
+def index_view(request):
+    index_path = os.path.join(settings.BASE_DIR, "staticfiles", "frontend", "index.html")
+    if os.path.exists(index_path):
+        with open(index_path, "r", encoding="utf-8") as f:
+            return HttpResponse(f.read(), content_type="text/html")
+    return HttpResponse("SocialMediaAI API is active. Visit /api/ for REST endpoints.", content_type="text/plain")
+
 urlpatterns = [
+    path("", index_view, name="index"),
     path("admin/", admin.site.urls),
     path("api/", include("core.urls")),
     path("api/oauth/", include("core.oauth_urls")),

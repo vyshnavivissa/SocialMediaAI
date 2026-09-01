@@ -32,11 +32,10 @@ DEBUG = os.getenv(
 ).lower() == "true"
 
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    ".onrender.com",
-]
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "*,127.0.0.1,localhost,.onrender.com,.amazonaws.com",
+).split(",")
 
 
 # ==========================================

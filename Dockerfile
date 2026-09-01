@@ -4,24 +4,24 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
 
-# Copy dependency definitions and install
+# Copy frontend dependency files and install
 COPY frontend/package*.json ./
 RUN npm ci
 
-# Copy frontend source code and build production assets
+# Copy frontend source files and generate production build
 COPY frontend/ ./
 RUN npm run build
 
 # ==========================================
-# STAGE 2: Python Backend & Production Server
+# STAGE 2: Python Backend & Unified Production Server
 # ==========================================
-FROM python:3.11-slim AS backend-runner
+FROM python:3.11-slim AS runner
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000
 
-# Install system dependencies
+# Install required system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -30,18 +30,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app/backend
 
-# Install Python dependencies
+# Install Python backend dependencies
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend source code
 COPY backend/ ./
 
-# Copy built frontend static assets into Django staticfiles
+# Copy built React frontend static assets into Django static directory
 COPY --from=frontend-builder /app/frontend/dist ./staticfiles/frontend
 
-# Expose server port
+# Expose production port
 EXPOSE 8000
 
-# Startup command: run database migrations, collect static assets, and start Gunicorn
+# Run database migrations, collect static assets, and launch Gunicorn web server
 CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3"]

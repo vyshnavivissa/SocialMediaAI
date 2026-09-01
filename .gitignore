@@ -42,6 +42,12 @@ frontend/dist/
 .DS_Store
 Thumbs.db
 
+# Secrets and AWS deployment manifests
+app-secrets.json
+*-policy.json
+pipeline-def.json
+task-def*.json
+
 # Testing
 .pytest_cache/
 .coverage

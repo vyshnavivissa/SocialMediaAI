@@ -309,7 +309,7 @@ function Calendar() {
                                                                 {new Date(post.scheduled_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                             </span>
                                                         </div>
-                                                        <div style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: "2px", opacity: 0.9 }}>
+                                                        <div style={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere", marginTop: "2px", opacity: 0.9, lineHeight: "1.35" }}>
                                                             {post.generated_post_details?.master_caption || `Post #${post.generated_post}`}
                                                         </div>
                                                     </div>
@@ -386,7 +386,7 @@ function Calendar() {
                                     </div>
 
                                     {selectedPost.generated_post_details?.master_caption && (
-                                        <div style={{ fontSize: "0.85rem", color: "var(--text-main)", marginTop: "8px" }}>
+                                        <div style={{ fontSize: "0.85rem", color: "var(--text-main)", marginTop: "8px", whiteSpace: "pre-wrap", wordBreak: "break-word", overflowWrap: "anywhere" }}>
                                             "{selectedPost.generated_post_details.master_caption}"
                                         </div>
                                     )}
