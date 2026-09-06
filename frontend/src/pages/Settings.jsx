@@ -24,19 +24,8 @@ function Settings() {
     }, []);
 
     // Connect flow
-    const handleConnect = async (platform, isMock = false) => {
+    const handleConnect = async (platform) => {
         try {
-            if (isMock) {
-                // Direct local connection without window redirect block
-                await api.get(`/oauth/${platform}/callback/?code=mock_dev_code`);
-                setConnectedPlatforms((prev) => ({
-                    ...prev,
-                    [platform]: true,
-                }));
-                toast.success(`${platform.toUpperCase()} connected successfully!`);
-                return;
-            }
-
             const response = await api.get(`/oauth/${platform}/login/`);
             if (response.data && response.data.login_url) {
                 window.location.href = response.data.login_url;
@@ -111,23 +100,13 @@ function Settings() {
                         <FaUnlink style={{ marginRight: "6px" }} /> Disconnect
                     </button>
                 ) : (
-                    <div style={{ display: "flex", gap: "8px" }}>
-                        <button
-                            type="button"
-                            className="connect-button"
-                            onClick={() => handleConnect(platformId)}
-                        >
-                            <FaLink style={{ marginRight: "6px" }} /> Connect Account
-                        </button>
-                        <button
-                            type="button"
-                            className="dev-connect-button"
-                            title="Quick local connection for development testing without HTTPS"
-                            onClick={() => handleConnect(platformId, true)}
-                        >
-                            Dev Connect
-                        </button>
-                    </div>
+                    <button
+                        type="button"
+                        className="connect-button"
+                        onClick={() => handleConnect(platformId)}
+                    >
+                        <FaLink style={{ marginRight: "6px" }} /> Connect Account
+                    </button>
                 )}
             </div>
         );
