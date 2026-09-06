@@ -19,6 +19,8 @@ class InstagramProvider(BaseOAuthProvider):
         self.client_id = os.getenv("INSTAGRAM_CLIENT_ID") or os.getenv("FACEBOOK_CLIENT_ID")
         self.client_secret = os.getenv("INSTAGRAM_CLIENT_SECRET") or os.getenv("FACEBOOK_CLIENT_SECRET")
         self.redirect_uri = os.getenv("INSTAGRAM_REDIRECT_URI")
+        if not self.redirect_uri or "YOUR-DOMAIN" in self.redirect_uri:
+            self.redirect_uri = "http://socialmedia-ai-alb-1323569086.us-east-1.elb.amazonaws.com/oauth/instagram/callback/"
 
     def generate_login_url(self, state: str = None):
 
