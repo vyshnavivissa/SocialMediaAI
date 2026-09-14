@@ -1,10 +1,10 @@
-# 🚀 SocialMediaAI — AI Social Media Command Center
+# SocialMediaAI — AI Social Media Command Center
 
 An end-to-end, enterprise-grade AI content generation, multi-platform publishing, and post scheduling system built with **React 19**, **Django REST Framework**, **LangChain**, **Groq Llama 3**, **Celery**, **Redis**, and **AWS ECS Fargate**.
 
 ---
 
-## 📖 Table of Contents
+##  Table of Contents
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
@@ -20,7 +20,7 @@ An end-to-end, enterprise-grade AI content generation, multi-platform publishing
 
 ---
 
-## 🌟 Overview
+##  Overview
 
 **SocialMediaAI** enables content creators, digital marketers, businesses, and social media managers to generate, edit, preview, schedule, and publish optimized social media posts across **Twitter/X**, **LinkedIn**, **Facebook**, and **Instagram** from a single intelligent dashboard.
 
@@ -28,18 +28,18 @@ By combining Large Language Models (LLM) with prompt engineering, SocialMediaAI 
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-- **🤖 AI-Powered Content Generation**: Multimodal prompt and image ingestion powered by LangChain and Groq Llama 3 models.
+- ** AI-Powered Content Generation**: Multimodal prompt and image ingestion powered by LangChain and Groq Llama 3 models.
 - **📱 Live Multi-Platform Previews**: Side-by-side post editing and interactive rendering tailored for LinkedIn, Twitter/X, Facebook, and Instagram.
-- **🔐 OAuth 2.0 Integration**: Secure social media account authentication utilizing the **Factory & Provider Design Pattern**.
-- **⚡ Instant & Scheduled Publishing**: Publish posts immediately or schedule future dispatches using **Celery background workers** and **Redis broker**.
-- **📊 Analytics & Post History**: Track published, pending, and failed posts with detailed execution status.
-- **☁️ Automated AWS CI/CD Pipeline**: Multi-stage Docker build pipeline deployed to **AWS ECS Fargate** with **Application Load Balancer (ALB)** and **GitHub Actions**.
+- **OAuth 2.0 Integration**: Secure social media account authentication utilizing the **Factory & Provider Design Pattern**.
+- **Instant & Scheduled Publishing**: Publish posts immediately or schedule future dispatches using **Celery background workers** and **Redis broker**.
+- **Analytics & Post History**: Track published, pending, and failed posts with detailed execution status.
+- **Automated AWS CI/CD Pipeline**: Multi-stage Docker build pipeline deployed to **AWS ECS Fargate** with **Application Load Balancer (ALB)** and **GitHub Actions**.
 
 ---
 
-## ⚙️ System Architecture & Data Flow
+##  System Architecture & Data Flow
 
 ```mermaid
 graph TD
@@ -88,7 +88,7 @@ graph TD
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Layer | Component | Technologies |
 | :--- | :--- | :--- |
@@ -103,7 +103,7 @@ graph TD
 
 ---
 
-## 💡 Design Patterns & Engineering Techniques
+##  Design Patterns & Engineering Techniques
 
 ### 1. Factory & Provider Design Pattern (OAuth Architecture)
 The OAuth implementation isolates platform-specific authentication details using the Factory & Provider Pattern:
@@ -126,7 +126,7 @@ Prompts and output parsers are chained into composable Runnable pipelines that a
 
 ---
 
-## 📂 Project Directory Structure
+##  Project Directory Structure
 
 ```text
 SocialMediaAI/
@@ -163,7 +163,7 @@ SocialMediaAI/
 
 ---
 
-## 🚀 Getting Started & Local Setup
+##  Getting Started & Local Setup
 
 ### Prerequisites
 - Python 3.11+
@@ -207,7 +207,7 @@ npm run dev
 
 ---
 
-## 🔐 Environment Variables Reference
+##  Environment Variables Reference
 
 Create a `.env` file in the `backend/` directory:
 
@@ -226,7 +226,7 @@ Create a `.env` file in the `backend/` directory:
 
 ---
 
-## 📡 API Endpoints Reference
+## API Endpoints Reference
 
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
@@ -243,7 +243,7 @@ Create a `.env` file in the `backend/` directory:
 
 ---
 
-## ☁️ AWS CI/CD Cloud Deployment
+##  AWS CI/CD Cloud Deployment
 
 The repository includes a complete automated deployment pipeline via **GitHub Actions** (`.github/workflows/deploy.yml`):
 
@@ -259,7 +259,4 @@ aws ecs update-service --cluster socialmedia-ai-cluster --service socialmedia-ai
 
 ---
 
-## 📄 License & Author
 
-Developed with ❤️ by **Vyshnavi Vissa**.  
-Licensed under the [MIT License](LICENSE).
