@@ -283,7 +283,4 @@ aws ecs update-service --cluster socialmedia-ai-cluster --service socialmedia-ai
 
 ---
 
-## 📄 License & Author
 
-Developed with ❤️ by **Vyshnavi Vissa**.  
-Licensed under the [MIT License](LICENSE).
