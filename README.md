@@ -1,971 +1,265 @@
-# SocialAI – AI Social Media Publisher
+# 🚀 SocialMediaAI — AI Social Media Command Center
 
-An end-to-end AI-powered social media content generation, publishing, and scheduling platform built using modern Generative AI, backend development, asynchronous task processing, and social media integration technologies.
-
-The project demonstrates the complete workflow of an intelligent social media management system—from image upload and AI content generation to platform-specific content creation, live preview, publishing, post scheduling, history tracking, and OAuth-based social media integration.
+An end-to-end, enterprise-grade AI content generation, multi-platform publishing, and post scheduling system built with **React 19**, **Django REST Framework**, **LangChain**, **Groq Llama 3**, **Celery**, **Redis**, and **AWS ECS Fargate**.
 
 ---
 
-## Overview
+## 📖 Table of Contents
 
-SocialAI helps content creators, digital marketers, businesses, and social media managers generate and manage content across multiple social media platforms from a single application.
-
-Users can upload an image, provide a content idea, select social media platforms, and generate optimized captions and hashtags using a Large Language Model.
-
-The application generates platform-specific posts for Twitter/X, Instagram, LinkedIn, and Facebook. Users can edit the generated content, preview posts before publishing, publish immediately, or schedule posts for a future date and time.
-
-The platform uses LangChain with the Groq API for AI content generation, Django REST Framework for backend APIs, React for the frontend, Celery for asynchronous task execution, and Redis as the message broker.
-
----
-
-## Features
-
-- AI-Powered Social Media Content Generation
-- User Prompt-Based Content Creation
-- Image Upload and Image Preview
-- AI-Generated Master Caption
-- AI-Generated Hashtags
-- Platform-Specific Content Generation
-- Twitter/X Content Generation
-- Instagram Caption Generation
-- LinkedIn Professional Post Generation
-- Facebook Post Generation
-- Multi-Platform Selection
-- Separate Content for Every Platform
-- Editable Platform-Specific Posts
-- Live Social Media Post Preview
-- Publish Posts Immediately
-- Mock Multi-Platform Publishing
-- Platform Publishing Status
-- Schedule Posts for a Future Date and Time
-- Celery Background Task Processing
-- Redis Message Broker
-- Scheduled Post History
-- Pending, Published, and Failed Status Tracking
-- Generated Post Database Storage
-- Published Post Database Storage
-- Responsive React Dashboard
-- Modern Social Media Management Interface
-- Toast Notifications
-- Django REST APIs
-- OAuth-Ready Architecture
-- Social Media Account Connection Interface
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [System Architecture & Data Flow](#-system-architecture--data-flow)
+- [Technology Stack](#-technology-stack)
+- [Design Patterns & Engineering Techniques](#-design-patterns--engineering-techniques)
+- [Project Directory Structure](#-project-directory-structure)
+- [Getting Started & Local Setup](#-getting-started--local-setup)
+- [Environment Variables Reference](#-environment-variables-reference)
+- [API Endpoints Reference](#-api-endpoints-reference)
+- [AWS CI/CD Cloud Deployment](#-aws-cicd-cloud-deployment)
+- [License & Author](#-license--author)
 
 ---
 
-## Tech Stack
+## 🌟 Overview
 
-### Frontend
+**SocialMediaAI** enables content creators, digital marketers, businesses, and social media managers to generate, edit, preview, schedule, and publish optimized social media posts across **Twitter/X**, **LinkedIn**, **Facebook**, and **Instagram** from a single intelligent dashboard.
 
-- React
-- Vite
-- JavaScript
-- React Router
-- Axios
-- Tailwind CSS
-- React Icons
-- React Hot Toast
-
-### Backend
-
-- Python
-- Django
-- Django REST Framework
-- Django CORS Headers
-
-### Generative AI
-
-- LangChain
-- LangChain Groq
-- Groq API
-- Llama Models
-- Prompt Engineering
-- LangChain Runnable Pipelines
-
-### Database
-
-- SQLite
-
-### Image Processing
-
-- Pillow
-- Django ImageField
-
-### Background Task Processing
-
-- Celery
-- Redis
-
-### Social Media Platforms
-
-- Twitter/X
-- Instagram
-- LinkedIn
-- Facebook
-
-### OAuth Architecture
-
-- OAuth 2.0
-- Provider Design Pattern
-- Factory Design Pattern
-- Service Layer Architecture
-
-### Development and Deployment
-
-- Docker
-- Git
-- GitHub
-- Python Virtual Environment
-- npm
-- Vite
+By combining Large Language Models (LLM) with prompt engineering, SocialMediaAI creates platform-customized content adapted to character limits, visual structures, hashtag strategies, and tone variations.
 
 ---
 
-## Project Structure
+## ✨ Key Features
+
+- **🤖 AI-Powered Content Generation**: Multimodal prompt and image ingestion powered by LangChain and Groq Llama 3 models.
+- **📱 Live Multi-Platform Previews**: Side-by-side post editing and interactive rendering tailored for LinkedIn, Twitter/X, Facebook, and Instagram.
+- **🔐 OAuth 2.0 Integration**: Secure social media account authentication utilizing the **Factory & Provider Design Pattern**.
+- **⚡ Instant & Scheduled Publishing**: Publish posts immediately or schedule future dispatches using **Celery background workers** and **Redis broker**.
+- **📊 Analytics & Post History**: Track published, pending, and failed posts with detailed execution status.
+- **☁️ Automated AWS CI/CD Pipeline**: Multi-stage Docker build pipeline deployed to **AWS ECS Fargate** with **Application Load Balancer (ALB)** and **GitHub Actions**.
+
+---
+
+## ⚙️ System Architecture & Data Flow
+
+```mermaid
+graph TD
+    subgraph Client ["Frontend Layer (React 19 + Vite)"]
+        UI["Dashboard & Post Composer"]
+        Settings["Account Integration Settings"]
+        Preview["Live Multi-Platform Preview"]
+    end
+
+    subgraph Backend ["Backend API Layer (Django REST Framework)"]
+        API["REST API Views & Serializers"]
+        OAuthService["OAuth 2.0 Provider Service"]
+        ImageService["Image Processing (Pillow)"]
+        DB[("SQLite / PostgreSQL Database")]
+    end
+
+    subgraph AI ["Generative AI Engine"]
+        LC["LangChain Runnable Pipelines"]
+        Groq["Groq Llama 3 LLM"]
+    end
+
+    subgraph Async ["Async Task Queue"]
+        Redis[("Redis Broker & Cache")]
+        CeleryWorker["Celery Worker"]
+        CeleryBeat["Celery Beat Task Scheduler"]
+    end
+
+    subgraph Social ["Social Media Integrations & AWS Cloud"]
+        LinkedIn["LinkedIn API (v2)"]
+        Twitter["Twitter / X API (v2)"]
+        Facebook["Facebook Graph API (v22)"]
+        Instagram["Instagram Graph API"]
+        AWS["AWS ECS Fargate + ALB"]
+    end
+
+    Client -->|HTTPS / REST API| API
+    API -->|Authenticate & Query| DB
+    API -->|Generate Captions & Hashtags| LC
+    LC -->|LLM Prompts| Groq
+    API -->|Delegate Publishing / Schedule| CeleryWorker
+    CeleryBeat -->|Trigger Due Posts| Redis
+    CeleryWorker -->|Fetch Jobs| Redis
+    CeleryWorker -->|Publish Post| OAuthService
+    OAuthService -->|OAuth 2.0 Auth & Publish| Social
+```
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Component | Technologies |
+| :--- | :--- | :--- |
+| **Frontend** | Framework & UI | React 19, Vite 8, React Router v7, Tailwind CSS v4, React Icons, React Hot Toast |
+| **Backend** | REST API & Core | Python 3.11, Django 5.2, Django REST Framework, Django CORS Headers, WhiteNoise |
+| **Authentication** | User Security | SimpleJWT (JSON Web Tokens), Session Authentication |
+| **Generative AI** | LLM Engine | LangChain, LangChain Groq, Groq Llama 3 Models, Prompt Templates |
+| **Async Tasks** | Queue & Scheduling | Celery 5.6, Redis 7 (Message Broker & Result Backend) |
+| **Database** | Data Storage | SQLite 3 (Dev), PostgreSQL / `dj-database-url` (Production) |
+| **Containerization** | DevOps | Multi-Stage Dockerfile (Node 20 Alpine + Python 3.11 Slim), Docker Compose |
+| **AWS Cloud** | Infrastructure | AWS ECS Fargate, AWS ECR, AWS Application Load Balancer (ALB), AWS Secrets Manager, GitHub Actions |
+
+---
+
+## 💡 Design Patterns & Engineering Techniques
+
+### 1. Factory & Provider Design Pattern (OAuth Architecture)
+The OAuth implementation isolates platform-specific authentication details using the Factory & Provider Pattern:
+- `BaseOAuthProvider`: Abstract base class enforcing interface methods (`generate_login_url`, `exchange_code`, `get_user_profile`, `publish_post`).
+- Concrete Providers: `LinkedInProvider`, `TwitterProvider`, `FacebookProvider`, `InstagramProvider`.
+- `OAuthFactory`: Instantiates and retrieves the appropriate provider dynamically at runtime.
+
+### 2. Service Layer Architecture
+Business logic is decoupled from HTTP controllers into reusable service modules:
+- `LLMService`: Ingests prompts and initializes Groq LLM pipelines.
+- `PublishService`: Coordinates post dispatching across social channels.
+- `ScheduleService`: Manages post states (`PENDING`, `PUBLISHED`, `FAILED`).
+
+### 3. LangChain Runnable Pipelines
+Prompts and output parsers are chained into composable Runnable pipelines that automatically transform raw prompts into platform-formatted text (Twitter 280-character limit, LinkedIn professional tone, Instagram hashtag blocks).
+
+### 4. Multi-Stage Docker Build
+- **Stage 1 (`node:20-alpine`)**: Builds the compiled React single-page application (`dist`).
+- **Stage 2 (`python:3.11-slim`)**: Copies the frontend build into `backend/frontend_dist`, collects static files via WhiteNoise, and runs the Gunicorn WSGI web server.
+
+---
+
+## 📂 Project Directory Structure
 
 ```text
 SocialMediaAI/
-│
 ├── backend/
-│   │
-│   ├── config/
-│   │   ├── __init__.py
-│   │   ├── settings.py
-│   │   ├── urls.py
-│   │   ├── celery.py
-│   │   ├── asgi.py
-│   │   └── wsgi.py
-│   │
-│   ├── core/
-│   │   ├── migrations/
-│   │   ├── admin.py
-│   │   ├── apps.py
-│   │   ├── models.py
-│   │   ├── serializers.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   ├── tasks.py
-│   │   ├── schedule_views.py
-│   │   ├── schedule_urls.py
-│   │   ├── oauth_views.py
-│   │   ├── oauth_urls.py
-│   │   ├── exception_handler.py
-│   │   ├── publish_views.py
-│   │   ├── publish_serializers.py
-│   │   └── throttles.py
-│   │
-│   ├── oauth/
-│   │   ├── base_provider.py
+│   ├── config/              # Django Settings, URLs, Celery, WSGI/ASGI
+│   ├── core/                # Data Models, Views, Serializers, Celery Tasks
+│   ├── oauth/               # Provider Factory & OAuth Implementation
+│   │   ├── providers/       # LinkedIn, Twitter, Facebook, Instagram Providers
 │   │   ├── oauth_factory.py
-│   │   ├── oauth_service.py
-│   │   │
-│   │   └── providers/
-│   │       ├── linkedin_provider.py
-│   │       ├── twitter_provider.py
-│   │       ├── instagram_provider.py
-│   │       └── facebook_provider.py
-│   │
-│   ├── prompts/
-│   │   ├── caption_prompt.py
-│   │   ├── hashtag_prompt.py
-│   │   ├── twitter_prompt.py
-│   │   ├── instagram_prompt.py
-│   │   ├── linkedin_prompt.py
-│   │   └── facebook_prompt.py
-│   │
-│   ├── runnables/
-│   │   ├── caption.py
-│   │   ├── hashtags.py
-│   │   └── platform.py
-│   │
-│   ├── services/
-│   │   ├── llm.py
-│   │   ├── image_service.py
-│   │   ├── caption_service.py
-│   │   ├── hashtag_service.py
-│   │   ├── platform_service.py
-│   │   ├── publish_service.py
-│   │   ├── social_media_service.py
-│   │   └── schedule_service.py
-│   │
-│   ├── tools/
-│   │   ├── twitter_tool.py
-│   │   ├── instagram_tool.py
-│   │   ├── linkedin_tool.py
-│   │   └── facebook_tool.py
-│   │
-│   ├── mock_api/
-│   │
-│   ├── tests/
-│   │   ├── test_llm.py
-│   │   └── test_prompt.py
-│   │
-│   ├── uploads/
-│   │
+│   │   └── oauth_service.py
+│   ├── prompts/             # LangChain Prompt Templates
+│   ├── runnables/           # LangChain Runnable Pipelines
+│   ├── services/            # LLM, Caption, Hashtag, Publish & Schedule Services
+│   ├── frontend_dist/       # Production Frontend Compiled Assets
 │   ├── manage.py
-│   ├── requirements.txt
-│   └── .env
+│   └── requirements.txt
 │
 ├── frontend/
-│   │
 │   ├── src/
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── PlatformSelector.jsx
-│   │   │   ├── ComposePost.jsx
-│   │   │   ├── LivePreview.jsx
-│   │   │
-│   │   ├── pages/
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── History.jsx
-│   │   │   └── Settings.jsx
-│   │   │
+│   │   ├── components/      # Navbar, PostComposer, LivePreview, PlatformSelector
+│   │   ├── pages/           # Dashboard, History, Settings, Analytics
+│   │   ├── api/             # Axios API Client Instance
 │   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
+│   │   └── index.css        # Custom Design System
 │   ├── package.json
 │   └── vite.config.js
 │
-├── .gitignore
-│
+├── .github/workflows/       # GitHub Actions AWS ECS Deployment Pipeline
+├── Dockerfile               # Production Multi-Stage Docker Build
+├── docker-compose.yml       # Local Development Orchestration
+├── task-def-latest.json     # AWS ECS Task Definition
 └── README.md
 ```
 
 ---
 
-## End-to-End Application Workflow
+## 🚀 Getting Started & Local Setup
 
-```text
-User Uploads Image
-        ↓
-User Provides Content Idea
-        ↓
-User Selects Social Media Platforms
-        ↓
-Image Validation
-        ↓
-Prompt Processing
-        ↓
-LangChain Runnable Pipeline
-        ↓
-Groq-Hosted Large Language Model
-        ↓
-Master Caption Generation
-        ↓
-Hashtag Generation
-        ↓
-Platform-Specific Content Generation
-        ↓
-Twitter/X Content
-Instagram Content
-LinkedIn Content
-Facebook Content
-        ↓
-Store Generated Content
-        ↓
-Live Post Preview
-        ↓
-Edit Generated Content
-        ↓
-Choose Publishing Method
-        │
-        ├──────────────┐
-        ↓              ↓
-Publish Now       Schedule for Later
-        ↓              ↓
-Publishing API    Django Schedule API
-        ↓              ↓
-Publishing Status Redis Message Broker
-                       ↓
-                 Celery Worker
-                       ↓
-             Execute at Scheduled Time
-                       ↓
-                Publishing Service
-                       ↓
-                 Update Status
-```
+### Prerequisites
+- Python 3.11+
+- Node.js 20+ & npm
+- Redis Server (or Docker)
 
----
-
-## AI Content Generation Pipeline
-
-```text
-Image
-  +
-User Prompt
-      ↓
-Prompt Validation
-      ↓
-Caption Prompt Template
-      ↓
-LangChain Runnable
-      ↓
-Groq LLM
-      ↓
-Master Caption
-      ↓
-Hashtag Prompt
-      ↓
-AI-Generated Hashtags
-      ↓
-Platform Prompt Templates
-      ↓
-Twitter/X Post
-Instagram Post
-LinkedIn Post
-Facebook Post
-      ↓
-Structured API Response
-```
-
----
-
-## Scheduling Pipeline
-
-```text
-Generated Social Media Post
-              ↓
-Select Platforms
-              ↓
-Select Future Date and Time
-              ↓
-POST /schedule/
-              ↓
-Django REST API
-              ↓
-Create ScheduledPost
-              ↓
-Status: Pending
-              ↓
-Send Task to Redis
-              ↓
-Celery Worker
-              ↓
-Wait Until Scheduled Time
-              ↓
-Execute Publishing Task
-              ↓
-Create PublishedPost Records
-              ↓
-Update Scheduled Post Status
-              ↓
-Published or Failed
-```
-
----
-
-## OAuth Architecture
-
-```text
-React Application
-        ↓
-OAuth Login API
-        ↓
-OAuth View
-        ↓
-OAuth Service
-        ↓
-OAuth Factory
-        ↓
-Platform Provider
-        │
-        ├── LinkedIn Provider
-        ├── Twitter/X Provider
-        ├── Instagram Provider
-        └── Facebook Provider
-        ↓
-Official Platform OAuth API
-        ↓
-Authorization Code
-        ↓
-Access Token
-        ↓
-Social Account Storage
-        ↓
-Real Social Media Publishing
-```
-
-> The OAuth architecture is implemented. Real platform authentication and publishing require developer application credentials, platform permissions, and API approval. Mock publishing is currently used where live credentials are unavailable.
-
----
-
-## Database Models
-
-### GeneratedPost
-
-Stores:
-
-- Uploaded image
-- User prompt
-- Master caption
-- AI-generated hashtags
-- Platform-specific posts
-- Creation timestamp
-- Update timestamp
-
-### PublishedPost
-
-Stores:
-
-- Generated post reference
-- Social media platform
-- Published content
-- Publishing status
-- Publishing timestamp
-
-### ScheduledPost
-
-Stores:
-
-- Generated post reference
-- Selected platforms
-- Scheduled date and time
-- Current scheduling status
-- Creation timestamp
-
-Supported statuses:
-
-```text
-Pending
-Published
-Failed
-```
-
-### SocialAccount
-
-Stores:
-
-- Social media platform
-- Platform user identifier
-- Access token
-- Refresh token
-- Token expiration information
-- Connection status
-- 
-## Frontend Dashboard
-
-The React dashboard provides:
-
-- Modern navigation bar
-- Social media platform selection cards
-- Content idea input
-- Image upload interface
-- AI content generation
-- Live image preview
-- Master caption preview
-- AI-generated hashtag preview
-- Separate platform-specific previews
-- Editable platform content
-- Publish Now functionality
-- Date and time selection
-- Schedule Post functionality
-- History navigation
-- Social account settings interface
----
-
-## REST API Endpoints
-
-### AI Content Generation
-
-```http
-POST /api/generate/
-```
-
-Generates:
-
-- Master caption
-- Hashtags
-- Platform-specific social media posts
-
-### Publish Content
-
-```http
-POST /api/publish/
-```
-
-Publishes generated content using the configured publishing service.
-
-### Create Scheduled Post
-
-```http
-POST /schedule/
-```
-
-Example request:
-
-```json
-{
-    "generated_post": 1,
-    "scheduled_time": "2026-07-09T12:30:00+05:30",
-    "platforms": [
-        "linkedin",
-        "twitter"
-    ]
-}
-```
-
-Example response:
-
-```json
-{
-    "id": 1,
-    "scheduled_time": "2026-07-09T12:30:00+05:30",
-    "platforms": [
-        "linkedin",
-        "twitter"
-    ],
-    "status": "pending",
-    "generated_post": 1
-}
-```
-
-### Scheduled Post History
-
-```http
-GET /schedule/history/
-```
-
-Returns all pending, published, and failed scheduled posts.
-
-### OAuth Login
-
-```http
-GET /oauth/{platform}/login/
-```
-
-Example:
-
-```http
-GET /oauth/linkedin/login/
-```
-
-### OAuth Callback
-
-```http
-GET /oauth/{platform}/callback/
-```
-
-### Disconnect Social Account
-
-```http
-DELETE /oauth/{platform}/disconnect/
-```
-
----
-
-## Installation
-
-### 1. Clone the Repository
-
+### 1. Clone Repository
 ```bash
-git clone <repository-url>
-
+git clone https://github.com/vyshnavivissa/SocialMediaAI.git
 cd SocialMediaAI
 ```
 
----
-
-### 2. Create a Python Virtual Environment
-
+### 2. Backend Setup
 ```bash
+# Create and activate virtual environment
 python -m venv venv
-```
-
-Activate it on Windows:
-
-```powershell
+# On Windows:
 venv\Scripts\activate
-```
+# On Linux/macOS:
+source venv/bin/activate
 
----
-
-### 3. Install Backend Dependencies
-
-```bash
+# Install dependencies
 cd backend
-
 pip install -r requirements.txt
-```
 
----
-
-### 4. Configure Environment Variables
-
-Create:
-
-```text
-backend/.env
-```
-
-Add:
-
-```env
-GROQ_API_KEY=your_groq_api_key
-
-LINKEDIN_CLIENT_ID=
-LINKEDIN_CLIENT_SECRET=
-LINKEDIN_REDIRECT_URI=http://127.0.0.1:8000/oauth/linkedin/callback/
-
-TWITTER_CLIENT_ID=
-TWITTER_CLIENT_SECRET=
-TWITTER_REDIRECT_URI=http://127.0.0.1:8000/oauth/twitter/callback/
-
-FACEBOOK_CLIENT_ID=
-FACEBOOK_CLIENT_SECRET=
-FACEBOOK_REDIRECT_URI=http://127.0.0.1:8000/oauth/facebook/callback/
-
-INSTAGRAM_CLIENT_ID=
-INSTAGRAM_CLIENT_SECRET=
-INSTAGRAM_REDIRECT_URI=http://127.0.0.1:8000/oauth/instagram/callback/
-```
-
-Never commit the `.env` file to GitHub.
-
----
-
-### 5. Apply Database Migrations
-
-```bash
-python manage.py makemigrations
-
+# Run migrations and start backend server
 python manage.py migrate
+python manage.py runserver 8000
 ```
 
----
-
-### 6. Start Redis with Docker
-
-Start Docker Desktop.
-
-Run:
-
+### 3. Frontend Setup
 ```bash
-docker run -d \
---name socialai-redis \
--p 6379:6379 \
-redis
-```
-
-Verify:
-
-```bash
-docker exec -it socialai-redis redis-cli ping
-```
-
-Expected:
-
-```text
-PONG
-```
-
----
-
-### 7. Start the Celery Worker
-
-On Windows:
-
-```bash
-celery -A config worker --loglevel=info --pool=solo
-```
-
-Expected:
-
-```text
-Connected to redis://localhost:6379/0
-
-core.tasks.publish_scheduled_post
-
-celery ready
-```
-
----
-
-### 8. Start the Django Backend
-
-```bash
-python manage.py runserver
-```
-
-Backend:
-
-```text
-http://127.0.0.1:8000
-```
-
----
-
-### 9. Install Frontend Dependencies
-
-Open another terminal:
-
-```bash
-cd frontend
-
+cd ../frontend
 npm install
-```
-
----
-
-### 10. Start React
-
-```bash
 npm run dev
 ```
 
-Frontend:
+### 4. Access Application
+- **Frontend SPA**: `http://localhost:5173/`
+- **Backend API**: `http://localhost:8000/api/`
 
-```text
-http://localhost:5173
+---
+
+## 🔐 Environment Variables Reference
+
+Create a `.env` file in the `backend/` directory:
+
+| Variable | Description | Example / Value |
+| :--- | :--- | :--- |
+| `SECRET_KEY` | Django Secret Key | `super-secret-key-for-dev` |
+| `DEBUG` | Debug Mode Flag | `True` |
+| `GROQ_API_KEY` | Groq API Key for Llama LLM | `gsk_...` |
+| `LINKEDIN_CLIENT_ID` | LinkedIn OAuth Client ID | `77upzkws2i9m1m` |
+| `LINKEDIN_CLIENT_SECRET` | LinkedIn OAuth Client Secret | `...` |
+| `LINKEDIN_REDIRECT_URI` | LinkedIn OAuth Callback URL | `http://127.0.0.1:8000/oauth/linkedin/callback/` |
+| `TWITTER_CLIENT_ID` | Twitter / X OAuth Client ID | `...` |
+| `TWITTER_CLIENT_SECRET` | Twitter / X OAuth Client Secret | `...` |
+| `TWITTER_REDIRECT_URI` | Twitter / X Callback URL | `http://127.0.0.1:8000/oauth/twitter/callback/` |
+| `REDIS_URL` | Redis Broker URL | `redis://localhost:6379/0` |
+
+---
+
+## 📡 API Endpoints Reference
+
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/login/` | Obtain SimpleJWT Token pair (`access`, `refresh`) | No |
+| `POST` | `/api/auth/register/` | Register new user account | No |
+| `GET` | `/api/auth/me/` | Retrieve current authenticated user profile | Yes |
+| `POST` | `/api/generate/` | Ingest prompt & image to generate social media posts | Yes |
+| `POST` | `/api/publish/` | Publish post immediately to social platforms | Yes |
+| `POST` | `/api/schedule/` | Schedule post for future execution | Yes |
+| `GET` | `/api/history/` | Fetch generated & scheduled post history | Yes |
+| `GET` | `/api/oauth/status/` | Fetch social account connection statuses | Yes |
+| `GET` | `/api/oauth/<platform>/login/` | Initiate OAuth login URL for platform | No |
+| `GET` | `/api/oauth/<platform>/callback/` | Handle OAuth authorization code exchange | No |
+
+---
+
+## ☁️ AWS CI/CD Cloud Deployment
+
+The repository includes a complete automated deployment pipeline via **GitHub Actions** (`.github/workflows/deploy.yml`):
+
+1. **Trigger**: Push to `main` branch.
+2. **Build**: GitHub Actions checks out code and executes multi-stage `Dockerfile`.
+3. **Register**: Docker image is tagged and pushed to **Amazon ECR** (`socialmedia-ai`).
+4. **Deploy**: Updates AWS ECS Fargate services (`socialmedia-ai-service`, `worker-service`, `beat-service`) with zero downtime using **AWS Application Load Balancer**.
+
+```bash
+# Force deployment manually via AWS CLI (if needed):
+aws ecs update-service --cluster socialmedia-ai-cluster --service socialmedia-ai-service --force-new-deployment
 ```
 
 ---
 
-## Running the Complete Application
+## 📄 License & Author
 
-Keep the following services running:
-
-```text
-Docker Desktop
-      ↓
-Redis Container
-
-Terminal 1
-      ↓
-Celery Worker
-
-Terminal 2
-      ↓
-Django REST API
-
-Terminal 3
-      ↓
-React Application
-```
-
----
-
-## AI Content Generation
-
-The application uses LangChain Runnable pipelines and Groq-hosted LLMs.
-
-The generation workflow creates:
-
-- A reusable master caption
-- Relevant social media hashtags
-- Short-form Twitter/X content
-- Engaging Instagram captions
-- Professional LinkedIn posts
-- Audience-focused Facebook posts
-
-Each platform uses a dedicated prompt template to generate content appropriate for its audience and content style.
-
----
-## Platform-Specific Content Generation
-
-SocialAI generates different content based on the communication style and audience of every social media platform.
-
-```text
-User Content Idea
-        ↓
-Master Caption Generation
-        ↓
-Hashtag Generation
-        ↓
-Platform-Specific Prompt Processing
-        │
-        ├── Twitter/X
-        │     Short and concise content
-        │
-        ├── Instagram
-        │     Engaging visual caption
-        │
-        ├── LinkedIn
-        │     Professional content
-        │
-        └── Facebook
-              Community-focused content
-        ↓
-Editable Platform Posts
-        ↓
-Live Preview
-        ↓
-Publish Now or Schedule
-## Prompt Engineering
-
-Dedicated prompts are used for:
-
-- Master caption generation
-- Hashtag generation
-- Twitter/X post generation
-- Instagram caption generation
-- LinkedIn professional post generation
-- Facebook community post generation
-
-This modular architecture makes prompts easier to test, improve, and maintain.
-
----
-
-## Publishing Status
-
-The application tracks publishing results for every selected platform.
-
-Supported publishing statuses:
-
-```text
-Success
-Failed
-```
-
-Scheduled posts support:
-
-```text
-Pending
-Published
-Failed
-```
-
----
-
-## Scheduled Post History
-
-The History dashboard displays:
-
-- Scheduled post ID
-- Scheduled date and time
-- Selected platforms
-- Generated post reference
-- Current publishing status
-
-Status indicators:
-
-```text
-Pending   
-
-Published 
-
-Failed    
-```
-
----
-
-## Business Impact
-
-This project demonstrates modern AI application engineering practices, including:
-
-- Automated Social Media Content Creation
-- Multi-Platform Content Optimization
-- Reduced Manual Content Writing
-- AI-Assisted Marketing Workflows
-- Centralized Social Media Management
-- Content Preview and Editing
-- Automated Post Scheduling
-- Background Task Processing
-- Scalable Service-Oriented Backend Architecture
-- Modular Prompt Engineering
-- REST API Development
-- Asynchronous Task Execution
-- OAuth-Ready Social Media Integration
-- Improved Productivity for Content Creators
-- Faster Content Production for Businesses
-
----
-
-## Current Implementation Status
-```text
-| Feature | Status |
-|---|---|
-| AI Content Generation | Completed |
-| Image Upload | Completed |
-| Image Preview | Completed |
-| Master Caption Generation | Completed |
-| Hashtag Generation | Completed |
-| Twitter/X Content Generation | Completed |
-| Instagram Content Generation | Completed |
-| LinkedIn Content Generation | Completed |
-| Facebook Content Generation | Completed |
-| Multi-Platform Selection | Completed |
-| Separate Platform Content | Completed |
-| Editable Platform Content | Completed |
-| Live Post Preview | Completed |
-| Modern React Dashboard | Completed |
-| Mock Publishing | Completed |
-| Publishing Status | Completed |
-| Scheduled Publishing | Completed |
-| Redis Integration | Completed |
-| Celery Integration | Completed |
-| Schedule History Backend | Completed |
-| OAuth Architecture | Completed |
-| Real OAuth Authentication | Planned |
-| Real Social Media Publishing | Planned |
-```
----
-
-## Future Enhancements
-
-- Real LinkedIn OAuth Integration
-- Real Twitter/X OAuth Integration
-- Real Facebook OAuth Integration
-- Real Instagram OAuth Integration
-- Official Social Media Publishing APIs
-- Connect and Disconnect Social Accounts
-- Access Token Refresh
-- Secure OAuth Token Encryption
-- User Authentication
-- Multi-User Support
-- PostgreSQL Database
-- Celery Beat
-- Scheduled Post Cancellation
-- Scheduled Post Editing
-- Calendar-Based Content Planner
-- Drag-and-Drop Content Calendar
-- AI Image Generation
-- AI Image Captioning
-- Automatic Best Posting Time Recommendation
-- Social Media Analytics
-- Engagement Tracking
-- Likes and Comment Analytics
-- Content Performance Dashboard
-- AI Content Recommendations
-- Trending Hashtag Discovery
-- Multiple Social Media Accounts
-- Content Approval Workflow
-- Team Collaboration
-- Role-Based Access Control
-- Email Notifications
-- GitHub Actions CI/CD
-- Docker Compose
-- AWS Deployment
-- Kubernetes Deployment
-- Prometheus Monitoring
-- Grafana Dashboards
-- MLflow Prompt and Model Tracking
-- LLM Response Evaluation
-- Automated Prompt Testing
-  
----
-
-## Use Cases
-
-- Content Creators
-- Social Media Managers
-- Digital Marketing Teams
-- Startups
-- Small Businesses
-- Marketing Agencies
-- Personal Brands
-- Influencers
-- Freelancers
-- Enterprise Marketing Teams
-
----
-
-## Conclusion
-
-SocialAI demonstrates an end-to-end Generative AI application that combines AI-powered content generation, platform-specific prompt engineering, live content preview, social media publishing architecture, asynchronous task execution, and automated scheduling.
-
-The project follows a modular architecture using React, Django REST Framework, LangChain, Groq, Celery, Redis, and Docker.
-
-It provides a scalable foundation for building a production-ready AI-powered social media management and publishing platform.
----
+Developed with ❤️ by **Vyshnavi Vissa**.  
+Licensed under the [MIT License](LICENSE).
