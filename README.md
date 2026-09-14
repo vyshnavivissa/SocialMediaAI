@@ -1,14 +1,14 @@
-# SocialMediaAI — AI Social Media Command Center
+# 🚀 SocialMediaAI — AI Social Media Command Center
 
-An end-to-end, enterprise-grade AI content generation, multi-platform publishing, and post scheduling system built with **React 19**, **Django REST Framework**, **LangChain**, **Groq Llama 3**, **Celery**, **Redis**, and **AWS ECS Fargate**.
+An end-to-end, enterprise-grade AI content generation, multi-platform publishing, and post scheduling system built with **React 19**, **Django REST Framework**, **LangChain**, **LangGraph Multi-Agent StateGraph**, **Groq Llama 3**, **Celery**, **Redis**, and **AWS ECS Fargate**.
 
 ---
 
-##  Table of Contents
+## 📖 Table of Contents
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
-- [System Architecture & Data Flow](#-system-architecture--data-flow)
+- [System Architecture & Multi-Agent Flow](#-system-architecture--multi-agent-flow)
 - [Technology Stack](#-technology-stack)
 - [Design Patterns & Engineering Techniques](#-design-patterns--engineering-techniques)
 - [Project Directory Structure](#-project-directory-structure)
@@ -20,26 +20,42 @@ An end-to-end, enterprise-grade AI content generation, multi-platform publishing
 
 ---
 
-##  Overview
+## 🌟 Overview
 
 **SocialMediaAI** enables content creators, digital marketers, businesses, and social media managers to generate, edit, preview, schedule, and publish optimized social media posts across **Twitter/X**, **LinkedIn**, **Facebook**, and **Instagram** from a single intelligent dashboard.
 
-By combining Large Language Models (LLM) with prompt engineering, SocialMediaAI creates platform-customized content adapted to character limits, visual structures, hashtag strategies, and tone variations.
+Powered by **LangChain** and **LangGraph Multi-Agent StateGraphs**, SocialMediaAI orchestrates a team of specialized AI agents (Vision Analyzer, Strategy Planner, Hashtag Optimizer, Copywriter, and Quality Critic) to construct platform-tailored posts with automated reflection loops.
 
 ---
 
-##  Key Features
+## ✨ Key Features
 
-- ** AI-Powered Content Generation**: Multimodal prompt and image ingestion powered by LangChain and Groq Llama 3 models.
+- **🤖 Autonomous Multi-Agent AI Engine**: 5-node **LangGraph StateGraph** featuring reflection feedback loops between Copywriter and Quality Critic agents.
 - **📱 Live Multi-Platform Previews**: Side-by-side post editing and interactive rendering tailored for LinkedIn, Twitter/X, Facebook, and Instagram.
-- **OAuth 2.0 Integration**: Secure social media account authentication utilizing the **Factory & Provider Design Pattern**.
-- **Instant & Scheduled Publishing**: Publish posts immediately or schedule future dispatches using **Celery background workers** and **Redis broker**.
-- **Analytics & Post History**: Track published, pending, and failed posts with detailed execution status.
-- **Automated AWS CI/CD Pipeline**: Multi-stage Docker build pipeline deployed to **AWS ECS Fargate** with **Application Load Balancer (ALB)** and **GitHub Actions**.
+- **🔐 OAuth 2.0 Integration**: Secure social media account authentication utilizing the **Factory & Provider Design Pattern**.
+- **⚡ Instant & Scheduled Publishing**: Publish posts immediately or schedule future dispatches using **Celery background workers** and **Redis broker**.
+- **📊 Analytics & Post History**: Track published, pending, and failed posts with detailed execution status.
+- **☁️ Automated AWS CI/CD Pipeline**: Multi-stage Docker build pipeline deployed to **AWS ECS Fargate** with **Application Load Balancer (ALB)** and **GitHub Actions**.
 
 ---
 
-##  System Architecture & Data Flow
+## ⚙️ System Architecture & Multi-Agent Flow
+
+### 1. LangGraph Autonomous Multi-Agent StateGraph
+
+```mermaid
+graph TD
+    Start([User Input & Image Upload]) --> VisionNode["1. Vision Agent (Vision Analysis)"]
+    VisionNode --> StrategyNode["2. Strategy Caption Agent (Hook & Strategy)"]
+    StrategyNode --> HashtagNode["3. Trend Hashtag Agent (Hashtags)"]
+    HashtagNode --> CopywriterNode["4. Copywriter Agent (Platform Specific Posts)"]
+    CopywriterNode --> CriticNode["5. Critic Reflection Agent (Quality Check)"]
+    
+    CriticNode -->|is_approved = True OR revision_count >= 3| End([Final Content Output])
+    CriticNode -->|is_approved = False & revision_count < 3| CopywriterNode
+```
+
+### 2. High-Level Subsystem Integration
 
 ```mermaid
 graph TD
@@ -56,8 +72,9 @@ graph TD
         DB[("SQLite / PostgreSQL Database")]
     end
 
-    subgraph AI ["Generative AI Engine"]
-        LC["LangChain Runnable Pipelines"]
+    subgraph AI ["Generative AI Engine (LangChain + LangGraph)"]
+        LG["LangGraph StateGraph Workflow"]
+        Nodes["Vision, Strategy, Hashtag, Copywriter & Critic Nodes"]
         Groq["Groq Llama 3 LLM"]
     end
 
@@ -77,8 +94,9 @@ graph TD
 
     Client -->|HTTPS / REST API| API
     API -->|Authenticate & Query| DB
-    API -->|Generate Captions & Hashtags| LC
-    LC -->|LLM Prompts| Groq
+    API -->|Invoke Multi-Agent Workflow| LG
+    LG -->|Agent Nodes| Nodes
+    Nodes -->|LLM Invocations| Groq
     API -->|Delegate Publishing / Schedule| CeleryWorker
     CeleryBeat -->|Trigger Due Posts| Redis
     CeleryWorker -->|Fetch Jobs| Redis
@@ -88,14 +106,14 @@ graph TD
 
 ---
 
-##  Technology Stack
+## 🛠️ Technology Stack
 
 | Layer | Component | Technologies |
 | :--- | :--- | :--- |
 | **Frontend** | Framework & UI | React 19, Vite 8, React Router v7, Tailwind CSS v4, React Icons, React Hot Toast |
 | **Backend** | REST API & Core | Python 3.11, Django 5.2, Django REST Framework, Django CORS Headers, WhiteNoise |
+| **AI Orchestration** | LangChain & LangGraph | LangGraph (`StateGraph`), LangChain Core, LangChain Groq, Groq Llama 3 Models |
 | **Authentication** | User Security | SimpleJWT (JSON Web Tokens), Session Authentication |
-| **Generative AI** | LLM Engine | LangChain, LangChain Groq, Groq Llama 3 Models, Prompt Templates |
 | **Async Tasks** | Queue & Scheduling | Celery 5.6, Redis 7 (Message Broker & Result Backend) |
 | **Database** | Data Storage | SQLite 3 (Dev), PostgreSQL / `dj-database-url` (Production) |
 | **Containerization** | DevOps | Multi-Stage Dockerfile (Node 20 Alpine + Python 3.11 Slim), Docker Compose |
@@ -103,22 +121,24 @@ graph TD
 
 ---
 
-##  Design Patterns & Engineering Techniques
+## 💡 Design Patterns & Engineering Techniques
 
-### 1. Factory & Provider Design Pattern (OAuth Architecture)
+### 1. LangGraph Multi-Agent StateGraph Architecture
+- `backend/agents/state.py`: Defines the typed `AgentState` schema storing prompts, visual analysis, hashtags, draft posts, and reflection metrics.
+- `backend/agents/graph.py`: Constructs the `StateGraph(AgentState)` linking 5 specialized agent nodes (`vision_agent`, `strategy_caption_agent`, `trend_hashtag_agent`, `copywriter_agent`, `critic_agent`).
+- Conditional Reflection Edge: Evaluates `is_approved` status and `revision_count` to trigger refinement loops.
+
+### 2. Factory & Provider Design Pattern (OAuth Architecture)
 The OAuth implementation isolates platform-specific authentication details using the Factory & Provider Pattern:
 - `BaseOAuthProvider`: Abstract base class enforcing interface methods (`generate_login_url`, `exchange_code`, `get_user_profile`, `publish_post`).
 - Concrete Providers: `LinkedInProvider`, `TwitterProvider`, `FacebookProvider`, `InstagramProvider`.
 - `OAuthFactory`: Instantiates and retrieves the appropriate provider dynamically at runtime.
 
-### 2. Service Layer Architecture
+### 3. Service Layer Architecture
 Business logic is decoupled from HTTP controllers into reusable service modules:
-- `LLMService`: Ingests prompts and initializes Groq LLM pipelines.
+- `SocialMediaService`: Invokes the compiled LangGraph agent workflow (`run_social_media_agent_workflow`).
 - `PublishService`: Coordinates post dispatching across social channels.
 - `ScheduleService`: Manages post states (`PENDING`, `PUBLISHED`, `FAILED`).
-
-### 3. LangChain Runnable Pipelines
-Prompts and output parsers are chained into composable Runnable pipelines that automatically transform raw prompts into platform-formatted text (Twitter 280-character limit, LinkedIn professional tone, Instagram hashtag blocks).
 
 ### 4. Multi-Stage Docker Build
 - **Stage 1 (`node:20-alpine`)**: Builds the compiled React single-page application (`dist`).
@@ -126,11 +146,15 @@ Prompts and output parsers are chained into composable Runnable pipelines that a
 
 ---
 
-##  Project Directory Structure
+## 📂 Project Directory Structure
 
 ```text
 SocialMediaAI/
 ├── backend/
+│   ├── agents/              # LangGraph Multi-Agent System
+│   │   ├── state.py         # AgentState Schema Definition
+│   │   ├── nodes.py         # 5 Agent Node Implementations
+│   │   └── graph.py         # StateGraph Compilation & Reflection Logic
 │   ├── config/              # Django Settings, URLs, Celery, WSGI/ASGI
 │   ├── core/                # Data Models, Views, Serializers, Celery Tasks
 │   ├── oauth/               # Provider Factory & OAuth Implementation
@@ -139,7 +163,7 @@ SocialMediaAI/
 │   │   └── oauth_service.py
 │   ├── prompts/             # LangChain Prompt Templates
 │   ├── runnables/           # LangChain Runnable Pipelines
-│   ├── services/            # LLM, Caption, Hashtag, Publish & Schedule Services
+│   ├── services/            # SocialMediaService, Publish & Schedule Services
 │   ├── frontend_dist/       # Production Frontend Compiled Assets
 │   ├── manage.py
 │   └── requirements.txt
@@ -163,7 +187,7 @@ SocialMediaAI/
 
 ---
 
-##  Getting Started & Local Setup
+## 🚀 Getting Started & Local Setup
 
 ### Prerequisites
 - Python 3.11+
@@ -207,7 +231,7 @@ npm run dev
 
 ---
 
-##  Environment Variables Reference
+## 🔐 Environment Variables Reference
 
 Create a `.env` file in the `backend/` directory:
 
@@ -226,14 +250,14 @@ Create a `.env` file in the `backend/` directory:
 
 ---
 
-## API Endpoints Reference
+## 📡 API Endpoints Reference
 
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/auth/login/` | Obtain SimpleJWT Token pair (`access`, `refresh`) | No |
 | `POST` | `/api/auth/register/` | Register new user account | No |
 | `GET` | `/api/auth/me/` | Retrieve current authenticated user profile | Yes |
-| `POST` | `/api/generate/` | Ingest prompt & image to generate social media posts | Yes |
+| `POST` | `/api/generate/` | Ingest prompt & image to run LangGraph Agent StateGraph | Yes |
 | `POST` | `/api/publish/` | Publish post immediately to social platforms | Yes |
 | `POST` | `/api/schedule/` | Schedule post for future execution | Yes |
 | `GET` | `/api/history/` | Fetch generated & scheduled post history | Yes |
@@ -243,7 +267,7 @@ Create a `.env` file in the `backend/` directory:
 
 ---
 
-##  AWS CI/CD Cloud Deployment
+## ☁️ AWS CI/CD Cloud Deployment
 
 The repository includes a complete automated deployment pipeline via **GitHub Actions** (`.github/workflows/deploy.yml`):
 
@@ -259,4 +283,7 @@ aws ecs update-service --cluster socialmedia-ai-cluster --service socialmedia-ai
 
 ---
 
+## 📄 License & Author
 
+Developed with ❤️ by **Vyshnavi Vissa**.  
+Licensed under the [MIT License](LICENSE).
